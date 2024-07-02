@@ -1,8 +1,8 @@
-package cc.seati.fabric;
+package cc.seati.fabric.PlayerTracer;
 
 import net.fabricmc.api.ModInitializer;
 
-import cc.seati.Main;
+import cc.seati.PlayerTracer.Main;
 
 public final class MainFabric implements ModInitializer {
     @Override

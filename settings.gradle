@@ -7,7 +7,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'playerdatatracer'
+rootProject.name = 'playertracer'
 
 include 'common'
 include 'fabric'

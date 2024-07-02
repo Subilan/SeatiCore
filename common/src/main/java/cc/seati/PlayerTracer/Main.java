@@ -1,6 +1,6 @@
-package cc.seati;
+package cc.seati.PlayerTracer;
 
-import cc.seati.Database.Database;
+import cc.seati.PlayerTracer.Database.Database;
 import dev.architectury.event.events.common.PlayerEvent;
 
 import java.util.logging.LogManager;

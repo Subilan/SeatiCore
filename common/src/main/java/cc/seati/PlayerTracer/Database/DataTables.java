@@ -1,9 +1,9 @@
-package cc.seati.Database;
+package cc.seati.PlayerTracer.Database;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
-import cc.seati.Main;
+import cc.seati.PlayerTracer.Main;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

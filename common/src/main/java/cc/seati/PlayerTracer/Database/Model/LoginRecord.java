@@ -1,9 +1,9 @@
-package cc.seati.Database.Model;
+package cc.seati.PlayerTracer.Database.Model;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.builder.TableQueryBuilder;
-import cc.seati.Database.DataTables;
-import cc.seati.Main;
+import cc.seati.PlayerTracer.Database.DataTables;
+import cc.seati.PlayerTracer.Main;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;

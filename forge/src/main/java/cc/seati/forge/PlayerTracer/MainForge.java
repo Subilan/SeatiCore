@@ -1,10 +1,10 @@
-package cc.seati.forge;
+package cc.seati.forge.PlayerTracer;
 
 import dev.architectury.platform.forge.EventBuses;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import cc.seati.Main;
+import cc.seati.PlayerTracer.Main;
 
 @Mod(Main.MOD_ID)
 public final class MainForge {

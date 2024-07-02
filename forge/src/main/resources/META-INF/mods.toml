@@ -4,30 +4,30 @@ loaderVersion = "[47,)"
 license = "MIT"
 
 [[mods]]
-modId = "playerdatatracer"
+modId = "playertracer"
 version = "${version}"
-displayName = "PlayerDataTracer"
+displayName = "PlayerTracer"
 authors = "Subilan"
 description = '''
 Server-side only mod used to automatically record & save player data in database.
 '''
 #logoFile = ""
 
-[[dependencies.playerdatatracer]]
+[[dependencies.playertracer]]
 modId = "forge"
 mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.playerdatatracer]]
+[[dependencies.playertracer]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.20.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.playerdatatracer]]
+[[dependencies.playertracer]]
 modId = "architectury"
 mandatory = true
 versionRange = "[9.2.14,)"

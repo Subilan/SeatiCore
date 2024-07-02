@@ -1,10 +1,10 @@
-package cc.seati.Database;
+package cc.seati.PlayerTracer.Database;
 
 import cc.carm.lib.easysql.EasySQL;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.hikari.HikariConfig;
-import cc.seati.Config;
-import cc.seati.Main;
+import cc.seati.PlayerTracer.Config;
+import cc.seati.PlayerTracer.Main;
 
 import java.sql.SQLException;
 

@@ -1,4 +1,4 @@
-package cc.seati.Database.Model;
+package cc.seati.PlayerTracer.Database.Model;
 
 public enum LoginRecordActionType {
     LOGIN(1),

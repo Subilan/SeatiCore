@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "playerdatatracer",
+  "id": "playertracer",
   "version": "${version}",
-  "name": "PlayerDataTracer",
+  "name": "PlayerTracer",
   "description": "Server-side only mod used to automatically record & save player data in database.",
   "authors": [
     "Subilan"
@@ -12,18 +12,18 @@
     "sources": "https://github.com/Subilan/PlayerDataTracer"
   },
   "license": "MIT",
-  "icon": "assets/playerdatatracer/icon.png",
+  "icon": "assets/playertracer/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "cc.seati.fabric.MainFabric"
+      "cc.seati.fabric.PlayerTracer.MainFabric"
     ],
     "client": [
       "cc.seati.fabric.client.MainFabricClient"
     ]
   },
   "mixins": [
-    "playerdatatracer.mixins.json"
+    "playertracer.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.11",

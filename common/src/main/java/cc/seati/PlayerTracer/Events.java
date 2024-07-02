@@ -1,8 +1,8 @@
-package cc.seati;
+package cc.seati.PlayerTracer;
 
-import cc.seati.Database.Database;
-import cc.seati.Database.Model.LoginRecord;
-import cc.seati.Database.Model.LoginRecordActionType;
+import cc.seati.PlayerTracer.Database.Database;
+import cc.seati.PlayerTracer.Database.Model.LoginRecord;
+import cc.seati.PlayerTracer.Database.Model.LoginRecordActionType;
 import net.minecraft.server.level.ServerPlayer;
 
 public class Events {

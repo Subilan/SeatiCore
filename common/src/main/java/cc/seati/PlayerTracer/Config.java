@@ -1,4 +1,4 @@
-package cc.seati;
+package cc.seati.PlayerTracer;
 
 import org.bspfsystems.yamlconfiguration.file.YamlConfiguration;
 
@@ -10,7 +10,7 @@ public class Config {
     public static YamlConfiguration t;
 
     public static void init() {
-        configFile = new File("playerdatatracer.yml");
+        configFile = new File("playertracer.yml");
         try {
             if (configFile.createNewFile()) {
                 Main.LOGGER.info("Generated new configuration file at " + configFile.getAbsolutePath());

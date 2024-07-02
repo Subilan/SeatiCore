@@ -1,4 +1,4 @@
-package cc.seati.fabric.client;
+package cc.seati.fabric.PlayerTracer.client;
 
 import net.fabricmc.api.ClientModInitializer;
 
