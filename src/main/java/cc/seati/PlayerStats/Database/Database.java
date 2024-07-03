@@ -31,7 +31,7 @@ public class Database {
                 isValid = true;
             }
         } catch (SQLException e) {
-            Main.LOGGER.warning("Could not connect to database.");
+            Main.LOGGER.warn("Could not connect to database.");
             e.printStackTrace();
         }
 

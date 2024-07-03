@@ -66,10 +66,10 @@ public enum DataTables implements SQLTable {
                 if (value.create(manager)) {
                     Main.LOGGER.info("Initialized table " + value.getTableName());
                 } else {
-                    Main.LOGGER.warning("Could not create table " + value.getTableName());
+                    Main.LOGGER.warn("Could not create table " + value.getTableName());
                 }
             } catch (SQLException e) {
-                Main.LOGGER.warning("Caught SQLException. Could not create table " + value.getTableName());
+                Main.LOGGER.warn("Caught SQLException. Could not create table " + value.getTableName());
                 e.printStackTrace();
             }
         }

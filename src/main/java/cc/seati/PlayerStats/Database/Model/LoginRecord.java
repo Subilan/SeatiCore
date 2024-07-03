@@ -117,7 +117,7 @@ public class LoginRecord extends DatabaseRecord {
                 .executeAsync(q -> {
                     this.associate = true;
                 }, (e, a) -> {
-                    Main.LOGGER.warning("Error saving player login record.");
+                    Main.LOGGER.warn("Error saving player login record.");
                     e.printStackTrace();
                 });
     }

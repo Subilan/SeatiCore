@@ -109,11 +109,11 @@ public class PlaytimeRecord extends DatabaseRecord {
             e.printStackTrace();
             return;
         } catch (TimeoutException e) {
-            Main.LOGGER.warning("Database operation timeout when saving playtime record.");
+            Main.LOGGER.warn("Database operation timeout when saving playtime record.");
             e.printStackTrace();
             return;
         } catch (SQLException e) {
-            Main.LOGGER.warning("Database operation failed.");
+            Main.LOGGER.warn("Database operation failed.");
             e.printStackTrace();
             return;
         }

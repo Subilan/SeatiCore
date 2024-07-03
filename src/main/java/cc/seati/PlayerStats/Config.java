@@ -18,7 +18,7 @@ public class Config {
                 Main.LOGGER.info("Configuration file already exists. Skipping creation.");
             }
         } catch (IOException e) {
-            Main.LOGGER.warning("Could not create new configuration file.");
+            Main.LOGGER.warn("Could not create new configuration file.");
             e.printStackTrace();
         }
         t = YamlConfiguration.loadConfiguration(configFile);
