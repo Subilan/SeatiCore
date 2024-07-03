@@ -52,25 +52,26 @@ public enum DataTables implements SQLTable {
      * @throws SQLException 如果数据库操作出现问题，抛出 SQLException
      */
     @Override
-    public boolean create(@NotNull SQLManager sqlManager) throws SQLException {
+    public boolean create(@NotNull SQLManager sqlManager) {
         if (this.manager == null) this.manager = sqlManager;
 
         TableCreateBuilder tableBuilder = sqlManager.createTable(getTableName());
         if (builder != null) builder.accept(tableBuilder);
-        return tableBuilder.build().executeFunction(l -> l > 0, false);
+        try {
+            tableBuilder.build().execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public static void initialize(@NotNull SQLManager manager) {
         for (DataTables value : values()) {
-            try {
-                if (value.create(manager)) {
-                    Main.LOGGER.info("Initialized table " + value.getTableName());
-                } else {
-                    Main.LOGGER.warn("Could not create table " + value.getTableName());
-                }
-            } catch (SQLException e) {
-                Main.LOGGER.warn("Caught SQLException. Could not create table " + value.getTableName());
-                e.printStackTrace();
+            if (value.create(manager)) {
+                Main.LOGGER.info("Initialized table " + value.getTableName());
+            } else {
+                Main.LOGGER.error("Could not create table " + value.getTableName());
             }
         }
     }
