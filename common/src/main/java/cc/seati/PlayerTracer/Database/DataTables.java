@@ -24,6 +24,7 @@ public enum DataTables implements SQLTable {
         table.addColumn("afk", "INT NOT NULL DEFAULT 0 COMMENT 'in seconds'");
         table.addColumn("updated_at", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         table.addColumn("tag", "VARCHAR(20) NOT NULL");
+        table.addColumn("player", "VARCHAR(20) NOT NULL");
     });
 
     private final Consumer<TableCreateBuilder> builder;
