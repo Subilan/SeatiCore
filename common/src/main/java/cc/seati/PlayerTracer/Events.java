@@ -3,16 +3,27 @@ package cc.seati.PlayerTracer;
 import cc.seati.PlayerTracer.Database.Database;
 import cc.seati.PlayerTracer.Database.Model.LoginRecord;
 import cc.seati.PlayerTracer.Database.Model.LoginRecordActionType;
+import cc.seati.PlayerTracer.Tracer.PlaytimeTracer;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Events {
+    public static Map<ServerPlayer, PlaytimeTracer> playtimeTracerMap = new HashMap<>();
+
     public static void handlePlayerJoin(ServerPlayer player) {
-        new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString()).save(Database.manager);
+        PlaytimeTracer tracer = new PlaytimeTracer(player);
+        tracer.run(Database.manager);
+        playtimeTracerMap.put(player, tracer);
+        Main.LOGGER.info("Starting playtime tracer for player " + player.getName().getString());
         new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString()).saveSync(Database.manager);
     }
 
     public static void handlePlayerQuit(ServerPlayer player) {
-        new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString()).save(Database.manager);
+        playtimeTracerMap.get(player).shutdown();
+        playtimeTracerMap.remove(player);
+        Main.LOGGER.info("Shutting down playtime tracer for player " + player.getName().getString());
         new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString()).saveSync(Database.manager);
     }
 }
