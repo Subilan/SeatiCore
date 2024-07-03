@@ -90,7 +90,7 @@ public class LoginRecord extends DatabaseRecord {
         this.actionType = actionType ? LoginRecordActionType.LOGIN : LoginRecordActionType.LOGOUT;
         this.createdAt = createdAt;
         this.player = player;
-        this.assoc = true;
+        this.associate = true;
     }
 
     /**
@@ -115,7 +115,7 @@ public class LoginRecord extends DatabaseRecord {
                 .setColumnNames("action_type", "player")
                 .setParams(this.actionTypeValue, this.player)
                 .executeAsync(q -> {
-                    this.assoc = true;
+                    this.associate = true;
                 }, (e, a) -> {
                     Main.LOGGER.warning("Error saving player login record.");
                     e.printStackTrace();

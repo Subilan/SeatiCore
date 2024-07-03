@@ -31,7 +31,7 @@ public class PlaytimeRecord extends DatabaseRecord {
         this.updatedAt = updatedAt;
         this.tag = tag;
         this.player = player;
-        this.assoc = true;
+        this.associate = true;
     }
 
     public PlaytimeRecord(int total, int afk, String tag, String player) {
@@ -91,7 +91,7 @@ public class PlaytimeRecord extends DatabaseRecord {
                         .setColumnNames("total", "afk", "tag", "player")
                         .setParams(this.total, this.afk, this.tag, this.player)
                         .execute();
-                this.assoc = true;
+                this.associate = true;
                 return;
             }
 
