@@ -73,6 +73,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     implementation "org.bspfsystems:yamlconfiguration:2.0.2"
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.2.0'
     api "cc.carm.lib:easysql-hikaricp:0.4.7"
     api "cc.carm.lib:easysql-api:0.4.7"
 }
@@ -113,11 +114,10 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 shadowJar {
-    minimize()
-
     dependencies {
         include(dependency('org.bspfsystems:yamlconfiguration:.*'))
         include(dependency('cc.carm.lib:easysql.*:.*'))
+        include(dependency('com.mysql:mysql-connector-j:.*'))
     }
 
     archiveClassifier.set ''

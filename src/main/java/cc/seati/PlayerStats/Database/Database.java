@@ -15,6 +15,7 @@ public class Database {
 
     public static void init() {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/playerstats");
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setUsername(Config.t.getString("database.username", "root"));
         config.setPassword(Config.t.getString("database.password"));
         manager = EasySQL.createManager(config);
