@@ -15,7 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-public class PlaytimeRecord {
+public class PlaytimeRecord extends DatabaseRecord {
     public static final String TABLE_NAME = DataTables.PLAYTIME_RECORDS.getTableName();
     private int id;
     private int total;
@@ -23,7 +23,6 @@ public class PlaytimeRecord {
     private Timestamp updatedAt;
     private final String tag;
     private final String player;
-    private boolean assoc = false;
 
     public PlaytimeRecord(int id, int total, int afk, Timestamp updatedAt, String tag, String player) {
         this.id = id;
@@ -41,8 +40,6 @@ public class PlaytimeRecord {
         this.tag = tag;
         this.player = player;
     }
-
-    public boolean isAssociate() { return this.assoc; }
 
     public static Future<@Nullable PlaytimeRecord> from(SQLManager manager, String tag, String player) {
         return manager.createQuery()

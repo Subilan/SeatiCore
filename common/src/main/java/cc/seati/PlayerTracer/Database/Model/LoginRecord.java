@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class LoginRecord {
+public class LoginRecord extends DatabaseRecord {
     public static final String TABLE_NAME = DataTables.LOGIN_RECORDS.getTableName();
     private int id;
     private final LoginRecordActionType actionType;
     private int actionTypeValue;
     private Timestamp createdAt;
     private final String player;
-    private boolean assoc = false;
 
     public static LoginRecord fromResultSet(ResultSet rs) throws SQLException {
         return new LoginRecord(
@@ -104,15 +103,6 @@ public class LoginRecord {
         this.actionType = actionType;
         this.actionTypeValue = actionType.value;
         this.player = player;
-    }
-
-    /**
-     * 判断当前实例所代表的记录是否为数据表中存在的记录
-     *
-     * @return 是否是数据表中存在的记录
-     */
-    public boolean isAssociate() {
-        return this.assoc;
     }
 
     /**
