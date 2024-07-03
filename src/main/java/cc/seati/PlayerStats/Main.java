@@ -8,11 +8,11 @@ import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 
 
-@Mod("playerstats")
+@Mod(Main.MOD_ID)
 public final class Main {
     public static final String MOD_ID = "playerstats";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static void init() {
+    public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing PlayerStats...");
             Config.init();
