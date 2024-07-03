@@ -39,7 +39,8 @@ public class LoginRecord {
 
     /**
      * 根据 action_type 获取 LoginRecords 列表
-     * @param manager SQLManager
+     *
+     * @param manager     SQLManager
      * @param action_type 指定的 action_type
      * @return 指定 action_type 的 Completable Future
      */
@@ -59,8 +60,9 @@ public class LoginRecord {
 
     /**
      * 根据 id 获取特定的 LoginRecord
+     *
      * @param manager SQLManager
-     * @param id 指定 id
+     * @param id      指定 id
      * @return 指定的 LoginRecord（可能是 null）的 CompletableFuture
      */
     public static CompletableFuture<@Nullable LoginRecord> from(SQLManager manager, int id) {
@@ -79,10 +81,10 @@ public class LoginRecord {
     /**
      * 根据从数据库中获取的内容，创建一个 LoginRecord 实例
      *
-     * @param id 数据库项
+     * @param id         数据库项
      * @param actionType 数据库项
-     * @param createdAt 数据库项
-     * @param player 数据库项
+     * @param createdAt  数据库项
+     * @param player     数据库项
      */
     public LoginRecord(int id, boolean actionType, Timestamp createdAt, String player) {
         this.id = id;
@@ -96,7 +98,7 @@ public class LoginRecord {
      * 手动创建一个新的记录
      *
      * @param actionType 枚举类型表示的登录或者登出
-     * @param player 玩家名称
+     * @param player     玩家名称
      */
     public LoginRecord(LoginRecordActionType actionType, String player) {
         this.actionType = actionType;
@@ -114,20 +116,20 @@ public class LoginRecord {
     }
 
     /**
-     * （阻塞方法）将数据保存到数据库中
+     * 将数据保存到数据库中
+     *
      * @param manager SQLManager
      */
-    public void saveSync(SQLManager manager) {
-        try {
-            manager.createInsert(TABLE_NAME)
-                    .setColumnNames("action_type", "player")
-                    .setParams(this.actionTypeValue, this.player)
-                    .execute();
-        } catch (SQLException e) {
-            Main.LOGGER.warning("Error saving player login record.");
-            e.printStackTrace();
-        }
-        this.assoc = true;
+    public void saveAsync(SQLManager manager) {
+        manager.createInsert(TABLE_NAME)
+                .setColumnNames("action_type", "player")
+                .setParams(this.actionTypeValue, this.player)
+                .executeAsync(q -> {
+                    this.assoc = true;
+                }, (e, a) -> {
+                    Main.LOGGER.warning("Error saving player login record.");
+                    e.printStackTrace();
+                });
     }
 
     public boolean isLogin() {

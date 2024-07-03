@@ -17,13 +17,13 @@ public class Events {
         tracer.run(Database.manager);
         playtimeTracerMap.put(player, tracer);
         Main.LOGGER.info("Starting playtime tracer for player " + player.getName().getString());
-        new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString()).saveSync(Database.manager);
+        new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString()).saveAsync(Database.manager);
     }
 
     public static void handlePlayerQuit(ServerPlayer player) {
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
         Main.LOGGER.info("Shutting down playtime tracer for player " + player.getName().getString());
-        new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString()).saveSync(Database.manager);
+        new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString()).saveAsync(Database.manager);
     }
 }
