@@ -1,17 +1,16 @@
 package cc.seati.PlayerStats;
 
 import cc.seati.PlayerStats.Database.Database;
-import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import org.slf4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(Main.MOD_ID)
 public final class Main {
     public static final String MOD_ID = "playerstats";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger("PlayerStats");
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing PlayerStats...");
