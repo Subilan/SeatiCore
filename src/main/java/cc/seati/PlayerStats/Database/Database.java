@@ -14,7 +14,7 @@ public class Database {
     public static boolean isValid = false;
 
     public static void init() {
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/playerdatatracer");
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/playerstats");
         config.setUsername(Config.t.getString("database.username", "root"));
         config.setPassword(Config.t.getString("database.password"));
         manager = EasySQL.createManager(config);
