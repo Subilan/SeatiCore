@@ -113,17 +113,21 @@ public class LoginRecord {
         return this.assoc;
     }
 
-    public void save(SQLManager manager) {
-        manager.createInsert(TABLE_NAME)
-                .setColumnNames("action_type", "player")
-                .setParams(this.actionTypeValue, this.player)
-                .executeAsync(q -> {
-                    this.inserted = true;
-                }, (e, a) -> {
-                    Main.LOGGER.warning("Error saving player login record.");
-                    Main.LOGGER.warning("SQL: " + a.getSQLContent());
-                    e.printStackTrace();
-                });
+    /**
+     * （阻塞方法）将数据保存到数据库中
+     * @param manager SQLManager
+     */
+    public void saveSync(SQLManager manager) {
+        try {
+            manager.createInsert(TABLE_NAME)
+                    .setColumnNames("action_type", "player")
+                    .setParams(this.actionTypeValue, this.player)
+                    .execute();
+        } catch (SQLException e) {
+            Main.LOGGER.warning("Error saving player login record.");
+            e.printStackTrace();
+        }
+        this.assoc = true;
     }
 
     public boolean isLogin() {
