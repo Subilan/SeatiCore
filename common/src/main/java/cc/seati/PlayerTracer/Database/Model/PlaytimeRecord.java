@@ -67,7 +67,7 @@ public class PlaytimeRecord {
                 });
     }
 
-    public static Future<Boolean> isExist(String tag, String player, SQLManager manager) {
+    public static Future<Boolean> exist(String tag, String player, SQLManager manager) {
         return manager.createQuery()
                 .inTable(TABLE_NAME)
                 .addCondition("player", player)
@@ -89,7 +89,7 @@ public class PlaytimeRecord {
 
             // Firstly check if there is already a record of the player with the period tag.
             // If not, insert a new record with the latest values.
-            if (!isExist(this.tag, this.player, manager).get(5, TimeUnit.SECONDS)) {
+            if (!exist(this.tag, this.player, manager).get(5, TimeUnit.SECONDS)) {
                 manager.createInsert(TABLE_NAME)
                         .setColumnNames("total", "afk", "tag", "player")
                         .setParams(this.total, this.afk, this.tag, this.player)
