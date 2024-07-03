@@ -10,7 +10,7 @@ public class Config {
     public static YamlConfiguration t;
 
     public static void init() {
-        configFile = new File("playertracer.yml");
+        configFile = new File("playerstats.yml");
         try {
             if (configFile.createNewFile()) {
                 Main.LOGGER.info("Generated new configuration file at " + configFile.getAbsolutePath());
