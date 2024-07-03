@@ -20,7 +20,7 @@ public class LoginRecord {
     private int actionTypeValue;
     private Timestamp createdAt;
     private final String player;
-    private boolean inserted = false;
+    private boolean assoc = false;
 
     public static LoginRecord fromResultSet(ResultSet rs) throws SQLException {
         return new LoginRecord(
@@ -89,7 +89,7 @@ public class LoginRecord {
         this.actionType = actionType ? LoginRecordActionType.LOGIN : LoginRecordActionType.LOGOUT;
         this.createdAt = createdAt;
         this.player = player;
-        this.inserted = true;
+        this.assoc = true;
     }
 
     /**
@@ -109,8 +109,8 @@ public class LoginRecord {
      *
      * @return 是否是数据表中存在的记录
      */
-    public boolean isRecord() {
-        return this.inserted;
+    public boolean isAssociate() {
+        return this.assoc;
     }
 
     public void save(SQLManager manager) {
