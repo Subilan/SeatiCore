@@ -62,16 +62,21 @@ public final class PlaytimeTracker {
         }, 0, 1, TimeUnit.SECONDS);
 
         afkExecutor.scheduleAtFixedRate(() -> {
-            Vector<Double> newData = new Vector<>(List.of(this.targetPlayer.getX(), this.targetPlayer.getY(), this.targetPlayer.getZ(), (double) this.targetPlayer.getEyeHeight()));
+            Vec3 lookAngle = this.targetPlayer.getLookAngle();
+            Vector<Double> newData = new Vector<>(List.of(this.targetPlayer.getX(), this.targetPlayer.getY(), this.targetPlayer.getZ(), lookAngle.x(), lookAngle.y(), lookAngle.z()));
+
 
             // Compare new data with old data.
             // The fact that any item of the data keeps unchanged suggests the player is not moving validly.
-            if (
+            if ((
                     playerPositionData.get(0).equals(newData.get(0))
-                            || playerPositionData.get(1).equals(newData.get(1))
                             || playerPositionData.get(2).equals(newData.get(2))
                             || playerPositionData.get(3).equals(newData.get(3))
-            ) {
+                            || playerPositionData.get(4).equals(newData.get(4))
+                            || playerPositionData.get(5).equals(newData.get(5))
+            ) && (
+                    playerPositionData.get(1).equals(newData.get(1))
+            )) {
                 // If so, add afkBufferTime by 1, makes it closer to the threshold.
                 this.afkBufferTime += 1;
             } else {
