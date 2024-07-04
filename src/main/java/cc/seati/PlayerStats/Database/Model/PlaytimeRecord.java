@@ -3,17 +3,14 @@ package cc.seati.PlayerStats.Database.Model;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.PlayerStats.Database.DataTables;
 import cc.seati.PlayerStats.Main;
-import org.jetbrains.annotations.Nullable;
+import cc.seati.PlayerStats.Utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class PlaytimeRecord extends DatabaseRecord {
     public static final String TABLE_NAME = DataTables.PLAYTIME_RECORDS.getTableName();
@@ -41,7 +38,8 @@ public class PlaytimeRecord extends DatabaseRecord {
         this.player = player;
     }
 
-    public static Future<@Nullable PlaytimeRecord> from(SQLManager manager, String tag, String player) {
+    public static Future<PlaytimeRecord> from(SQLManager manager, String tag, String player) {
+        // Firstly check if the target record is present.
         return manager.createQuery()
                 .inTable(TABLE_NAME)
                 .addCondition("player", player)
@@ -50,6 +48,7 @@ public class PlaytimeRecord extends DatabaseRecord {
                 .build()
                 .executeFuture(q -> {
                     ResultSet rs = q.getResultSet();
+                    // If present, return the record.
                     if (rs.next()) {
                         return new PlaytimeRecord(
                                 rs.getInt("id"),
@@ -59,63 +58,40 @@ public class PlaytimeRecord extends DatabaseRecord {
                                 rs.getString("tag"),
                                 rs.getString("player")
                         );
+                    } else {
+                        // or, create an empty record and return.
+                        manager.createInsert(TABLE_NAME)
+                                .setColumnNames("total", "afk", "tag", "player")
+                                .setParams(0, 0, tag, player)
+                                .executeAsync();
+                        PlaytimeRecord record = new PlaytimeRecord(0, 0, tag, player);
+                        record.associate = true;
+                        return record;
                     }
-                    return null;
-                });
-    }
-
-    public static Future<Boolean> exist(String tag, String player, SQLManager manager) {
-        return manager.createQuery()
-                .inTable(TABLE_NAME)
-                .addCondition("player", player)
-                .addCondition("tag", tag)
-                .selectColumns("id")
-                .build()
-                .executeFuture(q -> {
-                    ResultSet rs = q.getResultSet();
-                    return rs.next();
                 });
     }
 
     /**
      * （阻塞方法）将数据保存到数据库中
+     *
      * @param manager SQLManager
      */
     public void saveSync(SQLManager manager) {
         try {
-
-            // Firstly check if there is already a record of the player with the period tag.
-            // If not, insert a new record with the latest values.
-            if (!exist(this.tag, this.player, manager).get(5, TimeUnit.SECONDS)) {
-                manager.createInsert(TABLE_NAME)
-                        .setColumnNames("total", "afk", "tag", "player")
-                        .setParams(this.total, this.afk, this.tag, this.player)
-                        .execute();
-                this.associate = true;
-                return;
-            }
-
-            // If so, update the target row with condition of player and tag with the latest value.
             manager.createUpdate(TABLE_NAME)
                     .addCondition("player", this.player)
                     .addCondition("tag", this.tag)
-                    .setColumnValues(new LinkedHashMap<>(Map.of(
-                            "total", this.total,
-                            "afk", this.afk
-                    )))
+                    .setColumnValues(new LinkedHashMap<>(
+                            Map.of(
+                                    "total", this.total,
+                                    "afk", this.afk
+                            )
+                    ))
                     .build()
                     .execute();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            return;
-        } catch (TimeoutException e) {
-            Main.LOGGER.warn("Database operation timeout when saving playtime record.");
-            e.printStackTrace();
-            return;
         } catch (SQLException e) {
             Main.LOGGER.warn("Database operation failed.");
             e.printStackTrace();
-            return;
         }
     }
 

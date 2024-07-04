@@ -20,8 +20,8 @@ public class Events {
     @SubscribeEvent
     public static void handlePlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
         ServerPlayer player = Utils.getServerPlayer(e.getEntity());
-        PlaytimeTracker tracer = new PlaytimeTracker(player);
-        tracer.run(Database.manager);
+        PlaytimeTracker tracer = new PlaytimeTracker(player, Database.manager);
+        tracer.run();
         playtimeTracerMap.put(player, tracer);
         Main.LOGGER.info("Starting playtime tracer for player " + player.getName().getString());
         new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString()).saveAsync(Database.manager);
