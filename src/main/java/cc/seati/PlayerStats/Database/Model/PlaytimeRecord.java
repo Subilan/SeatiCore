@@ -156,10 +156,12 @@ public class PlaytimeRecord extends DatabaseRecord {
     }
 
     public void increaseAfk() {
-        this.afk++;
+        this.afk += 1;
+        this.updatedAt = Utils.getCurrentTimestamp();
     }
 
     public void increaseTotal() {
-        this.total++;
+        this.total += 1;
+        this.updatedAt = Utils.getCurrentTimestamp();
     }
 }
