@@ -122,5 +122,6 @@ public final class PlaytimeTracker {
     public void shutdown() {
         this.timerExecutor.shutdown();
         this.afkExecutor.shutdown();
+        this.saveExecutor.shutdown();
     }
 }
