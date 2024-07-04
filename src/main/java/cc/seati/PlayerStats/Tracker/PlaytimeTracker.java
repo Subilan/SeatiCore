@@ -27,7 +27,12 @@ public final class PlaytimeTracker {
 
     public PlaytimeTracker(ServerPlayer forPlayer) {
         this.targetPlayer = forPlayer;
-        this.record = new PlaytimeRecord(0, 0, Config.t.getString("period-label", "default"), forPlayer.getName().getString());
+        this.manager = manager;
+        try {
+            this.record = PlaytimeRecord.from(manager, Utils.getPeriodTag(), forPlayer.getName().getString()).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
