@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlaytimeTracker {
+public final class PlaytimeTracker {
     private final ServerPlayer targetPlayer;
     private final ScheduledExecutorService timerExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService afkExecutor = Executors.newSingleThreadScheduledExecutor();
