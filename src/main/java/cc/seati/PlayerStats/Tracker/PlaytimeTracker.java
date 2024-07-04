@@ -21,6 +21,7 @@ public final class PlaytimeTracker {
     private final ScheduledExecutorService afkExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService saveExecutor = Executors.newSingleThreadScheduledExecutor();
     private boolean isAFK = false;
+    private boolean afkMessageReady = false;
     private int afkBufferTime = 0;
     private Vector<Double> playerPositionData = new Vector<>(4);
     private final PlaytimeRecord record;
@@ -49,6 +50,7 @@ public final class PlaytimeTracker {
         // Save record at one second period to ensure preciseness.
         // Assuming the updating action will cost far less than one second.
         // Assuming that HikariCP will handle this relatively high concurrency scenario well.
+
         saveExecutor.scheduleAtFixedRate(() -> {
             // SYNC
             this.record.saveSync(manager);
@@ -82,6 +84,7 @@ public final class PlaytimeTracker {
             } else {
                 // If player is currently moving, reset buffer time and remove afk status.
                 this.isAFK = false;
+                this.afkMessageReady = true;
                 this.afkBufferTime = 0;
             }
 
@@ -101,12 +104,8 @@ public final class PlaytimeTracker {
 
                 // Broadcast AFK message
                 // Note: PlayerList#broadcastChatMessage is not suitable for this case.
-                Objects.requireNonNull(targetPlayer.getServer())
-                        .getPlayerList()
-                        .getPlayers()
-                        .forEach(
-                                p -> p.sendSystemMessage(getAFKMessageComponent(targetPlayer))
-                        );
+                if (this.afkMessageReady) Utils.sendAll(targetPlayer.getServer(), getAFKMessageComponent(targetPlayer));
+                this.afkMessageReady = false;
             }
         }, 0, 1, TimeUnit.SECONDS);
     }
