@@ -70,12 +70,17 @@ repositories {
     }
 }
 
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    implementation "org.bspfsystems:yamlconfiguration:2.0.2"
-    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.2.0'
-    api "cc.carm.lib:easysql-hikaricp:0.4.7"
-    api "cc.carm.lib:easysql-api:0.4.7"
+    shade "org.bspfsystems:yamlconfiguration:2.0.2"
+    shade group: 'com.mysql', name: 'mysql-connector-j', version: '8.2.0'
+    shade "cc.carm.lib:easysql-hikaricp:0.4.7"
+    shade "cc.carm.lib:easysql-api:0.4.7"
 }
 
 tasks.named('processResources', ProcessResources).configure {
@@ -94,6 +99,7 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
+    archiveClassifier.set('slim')
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
@@ -114,13 +120,10 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 shadowJar {
-    dependencies {
-        include(dependency('org.bspfsystems:yamlconfiguration:.*'))
-        include(dependency('cc.carm.lib:easysql.*:.*'))
-        include(dependency('com.mysql:mysql-connector-j:.*'))
-    }
+    archiveClassifier.set('')
+    configurations = [project.configurations.shade]
 
-    archiveClassifier.set ''
+    finalizedBy 'reobfShadowJar'
     // Important Note 2024.07.03
     // To prevent ResolutionException at runtime, this must be removed from the package.
     // Since org.slf4j is widely used across many dependencies, Minecraft and Forge, it's easily to see ResolutionException
