@@ -3,17 +3,21 @@ package cc.seati.PlayerStats.Tracker;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.PlayerStats.Config;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
+import cc.seati.PlayerStats.Main;
+import cc.seati.PlayerStats.Utils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public final class PlaytimeTracker {
     private final ServerPlayer targetPlayer;
@@ -23,10 +27,11 @@ public final class PlaytimeTracker {
     private boolean isAFK = false;
     private boolean afkMessageReady = false;
     private int afkBufferTime = 0;
-    private Vector<Double> playerPositionData = new Vector<>(4);
-    private final PlaytimeRecord record;
+    private Vector<Double> playerPositionData = new Vector<>(List.of(0d, 0d, 0d, 0d, 0d, 0d));
+    private @Nullable PlaytimeRecord record = null;
+    private final SQLManager manager;
 
-    public PlaytimeTracker(ServerPlayer forPlayer) {
+    public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
         this.manager = manager;
         try {
@@ -44,9 +49,14 @@ public final class PlaytimeTracker {
      *     <li>每秒钟检查玩家的<b>位置</b>（XYZ）和<b>眼位</b>（eye position）是否发生变动，如果任意一个参数未变，增加挂机缓冲值，
      *     当挂机缓冲值达到 config 中规定的阈值时，将挂机状态设置为 true，并选择是提示所有人该玩家 AFK 的消息，或是踢出游戏。</li>
      * </ul>
-     * @param manager SQLManager
      */
-    public void run(SQLManager manager) {
+    public void run() {
+
+        if (this.record == null) {
+            Main.LOGGER.warn("Run playtime tracker for " + targetPlayer.getName().getString() + " failed.");
+            return;
+        }
+
         // Save record at one second period to ensure preciseness.
         // Assuming the updating action will cost far less than one second.
         // Assuming that HikariCP will handle this relatively high concurrency scenario well.
