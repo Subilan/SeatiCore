@@ -111,12 +111,12 @@ public final class PlaytimeTracker {
     }
 
     public static MutableComponent getAFKMessageComponent(Player targetPlayer) {
-        return targetPlayer.getName().copy().append(
-                Component.literal(" is now afk.")
-                        .setStyle(Style.EMPTY.withColor(
-                                TextColor.fromLegacyFormat(ChatFormatting.GRAY)
-                        ))
-        );
+        String pattern = Config.t.getString("playtime.afk-message-pattern", "$player is now afk.");
+        return Component.literal(
+                pattern.replaceAll("\\$player", targetPlayer.getName().getString())
+        ).setStyle(Style.EMPTY.withColor(
+                TextColor.fromLegacyFormat(ChatFormatting.GRAY)
+        ));
     }
 
     public void shutdown() {
