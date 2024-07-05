@@ -21,6 +21,7 @@ public class CommandManager {
                                         .executes(CommandManager::withActionArgumentHandler)
                         )
                         .executes(CommandManager::doSendVersionInformation);
+        dispatcher.register(command);
     }
 
     public static int withActionArgumentHandler(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
