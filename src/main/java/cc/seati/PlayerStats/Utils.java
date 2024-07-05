@@ -18,10 +18,6 @@ public class Utils {
         return new Timestamp(new Date().getTime());
     }
 
-    public static String getPeriodTag() {
-        return Config.t.getString("period-tag", "default");
-    }
-
     public static void sendAll(MinecraftServer server, Component component) {
         Objects.requireNonNull(server)
                 .getPlayerList()

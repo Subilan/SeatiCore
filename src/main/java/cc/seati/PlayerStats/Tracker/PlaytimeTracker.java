@@ -35,7 +35,7 @@ public final class PlaytimeTracker {
         this.targetPlayer = forPlayer;
         this.manager = manager;
         try {
-            this.record = PlaytimeRecord.from(manager, Utils.getPeriodTag(), forPlayer.getName().getString()).get(5, TimeUnit.SECONDS);
+            this.record = PlaytimeRecord.from(manager, Config.getPeriodTag(), forPlayer.getName().getString()).get(5, TimeUnit.SECONDS);
         } catch (TimeoutException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -101,15 +101,15 @@ public final class PlaytimeTracker {
             playerPositionData = newData;
 
             // If buffer time exceeds the threshold of kicking, just disconnect the player with a reason.
-            if (this.afkBufferTime >= Config.t.getInt("playtime.afk-kick-threshold", 3600)) {
-                this.targetPlayer.connection.disconnect(Component.literal("You have been in AFK state for too long (over " + Config.t.getInt("playtime.afk-kick-threshold", 3600) + " seconds!)"));
+            if (this.afkBufferTime >= Config.getAfkKickThreshold()) {
+                this.targetPlayer.connection.disconnect(Component.literal("You have been in AFK state for too long (over " + Config.getAfkKickThreshold() + " seconds!)"));
                 this.shutdown();
             }
 
             // If buffer time exceeds the threshold of notification, make isAFK true
             // The afk time will start to increase.
             // And a message will be broadcast.
-            if (this.afkBufferTime >= Config.t.getInt("playtime.afk-notify-threshold", 300)) {
+            if (this.afkBufferTime >= Config.getAfkNotifyThreshold()) {
                 this.isAFK = true;
 
                 // Broadcast AFK message
@@ -121,9 +121,8 @@ public final class PlaytimeTracker {
     }
 
     public static MutableComponent getAFKMessageComponent(Player targetPlayer) {
-        String pattern = Config.t.getString("playtime.afk-message-pattern", "$player is now afk.");
         return Component.literal(
-                pattern.replaceAll("\\$player", targetPlayer.getName().getString())
+                Config.getAfkMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString())
         ).setStyle(Style.EMPTY.withColor(
                 TextColor.fromLegacyFormat(ChatFormatting.GRAY)
         ));

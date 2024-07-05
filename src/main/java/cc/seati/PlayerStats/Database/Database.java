@@ -16,14 +16,14 @@ public class Database {
     public static void init() {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/playerstats");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        config.setUsername(Config.t.getString("database.username", "root"));
-        config.setPassword(Config.t.getString("database.password"));
+        config.setUsername(Config.getDatabaseUsername());
+        config.setPassword(Config.getDatabasePassword());
         manager = EasySQL.createManager(config);
 
         try {
             if (
                     !manager.getConnection().isValid(
-                            Config.t.getInt("database.connection-timeout", 5)
+                            Config.getDatabaseConnectionTimeout()
                     )
             ) {
                 Main.LOGGER.info("Database connection timeout.");
