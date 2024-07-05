@@ -14,7 +14,7 @@ public final class Main {
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing PlayerStats...");
-            Config.init();
+            Config.init(false);
             Database.init();
             LOGGER.info("Initialization end.");
         });

@@ -16,7 +16,7 @@ public class Config {
     public static File configFile;
     public static YamlConfiguration t;
 
-    public static void init() {
+    public static void init(boolean reload) {
         configFile = new File("playerstats.yml");
         try {
             if (configFile.createNewFile()) {
@@ -30,7 +30,11 @@ public class Config {
         }
         t = YamlConfiguration.loadConfiguration(configFile);
 
-        Main.LOGGER.info("Initialized configuration.");
+        if (reload) {
+            Main.LOGGER.info("Reloaded configuration.");
+        } else {
+            Main.LOGGER.info("Initialized configuration.");
+        }
     }
 
     public static int getAfkKickThreshold() {
