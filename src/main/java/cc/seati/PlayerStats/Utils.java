@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -21,6 +22,10 @@ public class Utils {
         return new Timestamp(new Date().getTime());
     }
 
+    public static String formatTimestamp(Timestamp timestamp) {
+        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
     public static void sendAll(MinecraftServer server, Component component) {
         Objects.requireNonNull(server)
                 .getPlayerList()
@@ -31,7 +36,7 @@ public class Utils {
     }
 
     public static void sendMessageCtx(CommandContext<CommandSourceStack> ctx, String message) {
-        ctx.getSource().sendSystemMessage(Component.literal(message));
+        ctx.getSource().sendSystemMessage(Text.literal(message));
     }
 
     public static <T> T waitFor(Future<T> future) throws ExecutionException, InterruptedException, TimeoutException {
