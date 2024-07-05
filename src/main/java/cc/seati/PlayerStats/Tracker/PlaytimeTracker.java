@@ -35,7 +35,7 @@ public final class PlaytimeTracker {
         this.targetPlayer = forPlayer;
         this.manager = manager;
         try {
-            this.record = PlaytimeRecord.from(manager, Config.getPeriodTag(), forPlayer.getName().getString()).get(5, TimeUnit.SECONDS);
+            this.record = Utils.waitFor(PlaytimeRecord.from(manager, Config.getPeriodTag(), forPlayer.getName().getString(), true));
         } catch (TimeoutException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
