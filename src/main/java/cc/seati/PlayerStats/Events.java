@@ -18,7 +18,7 @@ public class Events {
     public static Map<ServerPlayer, PlaytimeTracker> playtimeTracerMap = new HashMap<>();
 
     @SubscribeEvent
-    public static void handlePlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
         ServerPlayer player = Utils.getServerPlayer(e.getEntity());
         PlaytimeTracker tracer = new PlaytimeTracker(player, Database.manager);
         tracer.run();
@@ -28,7 +28,7 @@ public class Events {
     }
 
     @SubscribeEvent
-    public static void handlePlayerQuit(PlayerEvent.PlayerLoggedOutEvent e) {
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
         ServerPlayer player = Utils.getServerPlayer(e.getEntity());
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
