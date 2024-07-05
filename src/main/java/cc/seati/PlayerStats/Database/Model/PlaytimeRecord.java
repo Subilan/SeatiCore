@@ -4,6 +4,7 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.PlayerStats.Database.DataTables;
 import cc.seati.PlayerStats.Main;
 import cc.seati.PlayerStats.Utils;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,7 +39,36 @@ public class PlaytimeRecord extends DatabaseRecord {
         this.player = player;
     }
 
-    public static Future<PlaytimeRecord> from(SQLManager manager, String tag, String player) {
+    /**
+     * 验证该记录是否存在
+     * @param manager SQLManager
+     * @param tag Period tag
+     * @param player 玩家名称
+     * @return 关于是否存在的布尔值 Future
+     */
+    public static Future<Boolean> isPresent(SQLManager manager, String tag, String player) {
+        return manager.createQuery()
+                .inTable(TABLE_NAME)
+                .addCondition("player", player)
+                .addCondition("tag", tag)
+                .selectColumns("id")
+                .build()
+                .executeFuture(q -> q.getResultSet().next());
+    }
+
+    public static Future<@Nullable PlaytimeRecord> from(SQLManager manager, String tag, String player) {
+        return from(manager, tag, player, false);
+    }
+
+    /**
+     * 从数据库中获取数据
+     * @param manager SQLManager
+     * @param tag Period tag
+     * @param player 玩家名称
+     * @param autoCreate 是否自动创建，如果设置为 true，当记录不存在时会自动创建；如果设置为 false，当记录不存在时返回 null。为了更好的 IDE 提示，设置为 false 时建议使用 <b>PlaytimeRecord.from(SQLManager, String, String)</b> 方法。
+     * @return 对应的 PlaytimeRecord 实例
+     */
+    public static Future<PlaytimeRecord> from(SQLManager manager, String tag, String player, boolean autoCreate) {
         // Firstly check if the target record is present.
         return manager.createQuery()
                 .inTable(TABLE_NAME)
@@ -59,14 +89,18 @@ public class PlaytimeRecord extends DatabaseRecord {
                                 rs.getString("player")
                         );
                     } else {
-                        // or, create an empty record and return.
-                        manager.createInsert(TABLE_NAME)
-                                .setColumnNames("total", "afk", "tag", "player")
-                                .setParams(0, 0, tag, player)
-                                .executeAsync();
-                        PlaytimeRecord record = new PlaytimeRecord(0, 0, tag, player);
-                        record.associate = true;
-                        return record;
+                        if (autoCreate) {
+                            // or, create an empty record and return.
+                            manager.createInsert(TABLE_NAME)
+                                    .setColumnNames("total", "afk", "tag", "player")
+                                    .setParams(0, 0, tag, player)
+                                    .executeAsync();
+                            PlaytimeRecord record = new PlaytimeRecord(0, 0, tag, player);
+                            record.associate = true;
+                            return record;
+                        } else {
+                            return null;
+                        }
                     }
                 });
     }
