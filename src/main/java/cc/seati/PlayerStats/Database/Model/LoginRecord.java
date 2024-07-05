@@ -4,7 +4,6 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.builder.TableQueryBuilder;
 import cc.seati.PlayerStats.Database.DataTables;
 import cc.seati.PlayerStats.Main;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,15 +36,16 @@ public class LoginRecord extends DatabaseRecord {
     }
 
     /**
-     * 根据 action_type 获取 LoginRecords 列表
+     * 根据玩家获取 LoginRecords 列表
      *
-     * @param manager     SQLManager
-     * @param action_type 指定的 action_type
-     * @return 指定 action_type 的 Completable Future
+     * @param manager    SQLManager
+     * @param playername 玩家名称
+     * @return 指定玩家登录记录的 Future，如果不存在任何登录记录，那么会返回一个空的列表
      */
-    public static CompletableFuture<List<LoginRecord>> fromActionType(SQLManager manager, LoginRecordActionType action_type) {
+    public static CompletableFuture<List<LoginRecord>> from(SQLManager manager, String playername) {
         return getQueryBuilder(manager)
-                .addCondition("action_type", action_type.value)
+                .addCondition("player", playername)
+                .selectColumns("id", "action_type", "created_at", "player")
                 .build()
                 .executeFuture(q -> {
                     List<LoginRecord> records = new ArrayList<>();
@@ -54,26 +54,6 @@ public class LoginRecord extends DatabaseRecord {
                         records.add(fromResultSet(rs));
                     }
                     return records;
-                });
-    }
-
-    /**
-     * 根据 id 获取特定的 LoginRecord
-     *
-     * @param manager SQLManager
-     * @param id      指定 id
-     * @return 指定的 LoginRecord（可能是 null）的 CompletableFuture
-     */
-    public static CompletableFuture<@Nullable LoginRecord> from(SQLManager manager, int id) {
-        return getQueryBuilder(manager)
-                .addCondition("id", id)
-                .build()
-                .executeFuture(q -> {
-                    ResultSet rs = q.getResultSet();
-                    if (rs.next()) {
-                        return fromResultSet(rs);
-                    }
-                    return null;
                 });
     }
 

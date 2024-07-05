@@ -52,7 +52,7 @@ public class CommandInfo extends Command {
                 );
             }
 
-            List<LoginRecord> loginRecords = Utils.waitFor(LoginRecord.fromPlayerName(Database.manager, targetPlayerName));
+            List<LoginRecord> loginRecords = Utils.waitFor(LoginRecord.from(Database.manager, targetPlayerName));
             int loginSum = loginRecords.stream().filter(LoginRecord::isLogin).toList().size();
             if (loginSum > 0) {
                 message.append(
