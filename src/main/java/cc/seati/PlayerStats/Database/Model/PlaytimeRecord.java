@@ -2,12 +2,10 @@ package cc.seati.PlayerStats.Database.Model;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.PlayerStats.Database.DataTables;
-import cc.seati.PlayerStats.Main;
 import cc.seati.PlayerStats.Utils;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -41,9 +39,10 @@ public class PlaytimeRecord extends DatabaseRecord {
 
     /**
      * 验证该记录是否存在
+     *
      * @param manager SQLManager
-     * @param tag Period tag
-     * @param player 玩家名称
+     * @param tag     Period tag
+     * @param player  玩家名称
      * @return 关于是否存在的布尔值 Future
      */
     public static Future<Boolean> isPresent(SQLManager manager, String tag, String player) {
@@ -62,9 +61,10 @@ public class PlaytimeRecord extends DatabaseRecord {
 
     /**
      * 从数据库中获取数据
-     * @param manager SQLManager
-     * @param tag Period tag
-     * @param player 玩家名称
+     *
+     * @param manager    SQLManager
+     * @param tag        Period tag
+     * @param player     玩家名称
      * @param autoCreate 是否自动创建，如果设置为 true，当记录不存在时会自动创建；如果设置为 false，当记录不存在时返回 null。为了更好的 IDE 提示，设置为 false 时建议使用 <b>PlaytimeRecord.from(SQLManager, String, String)</b> 方法。
      * @return 对应的 PlaytimeRecord 实例
      */
@@ -111,7 +111,7 @@ public class PlaytimeRecord extends DatabaseRecord {
      * @param manager SQLManager
      */
     public void saveSync(SQLManager manager) {
-        try {
+        Utils.tryExec(() -> {
             manager.createUpdate(TABLE_NAME)
                     .addCondition("player", this.player)
                     .addCondition("tag", this.tag)
@@ -123,10 +123,8 @@ public class PlaytimeRecord extends DatabaseRecord {
                     ))
                     .build()
                     .execute();
-        } catch (SQLException e) {
-            Main.LOGGER.warn("Database operation failed.");
-            e.printStackTrace();
-        }
+            return null;
+        });
     }
 
     public Timestamp getUpdatedAt() {

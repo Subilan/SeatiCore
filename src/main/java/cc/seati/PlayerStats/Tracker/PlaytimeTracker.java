@@ -34,11 +34,10 @@ public final class PlaytimeTracker {
     public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
         this.manager = manager;
-        try {
+        Utils.tryExec(() -> {
             this.record = Utils.waitFor(PlaytimeRecord.from(manager, Config.getPeriodTag(), forPlayer.getName().getString(), true));
-        } catch (TimeoutException | ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+            return null;
+        });
     }
 
     /**

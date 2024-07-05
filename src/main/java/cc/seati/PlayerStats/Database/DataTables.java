@@ -4,6 +4,7 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
 import cc.seati.PlayerStats.Main;
+import cc.seati.PlayerStats.Utils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,13 +58,10 @@ public enum DataTables implements SQLTable {
 
         TableCreateBuilder tableBuilder = sqlManager.createTable(getTableName());
         if (builder != null) builder.accept(tableBuilder);
-        try {
+        return Utils.tryReturn(() -> {
             tableBuilder.build().execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+            return true;
+        }, false);
     }
 
     public static void initialize(@NotNull SQLManager manager) {

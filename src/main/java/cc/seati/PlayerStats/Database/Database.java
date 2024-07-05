@@ -5,8 +5,7 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.hikari.HikariConfig;
 import cc.seati.PlayerStats.Config;
 import cc.seati.PlayerStats.Main;
-
-import java.sql.SQLException;
+import cc.seati.PlayerStats.Utils;
 
 public class Database {
     public static HikariConfig config = new HikariConfig();
@@ -20,7 +19,7 @@ public class Database {
         config.setPassword(Config.getDatabasePassword());
         manager = EasySQL.createManager(config);
 
-        try {
+        Utils.tryExec(() -> {
             if (
                     !manager.getConnection().isValid(
                             Config.getDatabaseConnectionTimeout()
@@ -31,10 +30,8 @@ public class Database {
                 Main.LOGGER.info("Successfully connected to database.");
                 isValid = true;
             }
-        } catch (SQLException e) {
-            Main.LOGGER.warn("Could not connect to database.");
-            e.printStackTrace();
-        }
+            return null;
+        });
 
         Main.LOGGER.info("Initializing database...");
         DataTables.initialize(manager);
