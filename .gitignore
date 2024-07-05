@@ -2,3 +2,4 @@
 .idea/
 build
 run
+build.sh
