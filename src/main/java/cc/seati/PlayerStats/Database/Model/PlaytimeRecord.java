@@ -7,7 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -53,6 +55,29 @@ public class PlaytimeRecord extends DatabaseRecord {
                 .selectColumns("id")
                 .build()
                 .executeFuture(q -> q.getResultSet().next());
+    }
+
+    public static Future<List<PlaytimeRecord>> from(SQLManager manager, String tag) {
+        return manager.createQuery()
+                .inTable(TABLE_NAME)
+                .addCondition("tag", tag)
+                .selectColumns("id", "total", "afk", "tag", "player", "updated_at")
+                .build()
+                .executeFuture(q -> {
+                    List<PlaytimeRecord> records = new ArrayList<>();
+                    ResultSet rs = q.getResultSet();
+                    while (rs.next()) {
+                        records.add(new PlaytimeRecord(
+                                rs.getInt("id"),
+                                rs.getInt("total"),
+                                rs.getInt("afk"),
+                                rs.getTimestamp("updated_at"),
+                                rs.getString("tag"),
+                                rs.getString("player")
+                        ));
+                    }
+                    return records;
+                });
     }
 
     public static Future<@Nullable PlaytimeRecord> from(SQLManager manager, String tag, String player) {
