@@ -17,6 +17,10 @@ public class Text {
         return Component.literal(translateAlternateColorCodes("&", literal));
     }
 
+    public static MutableComponent title(Component component) {
+        return literal("\n&e* &r").append(component).append(literal(" &e*\n&7---------------\n\n"));
+    }
+
     /**
      * 将 str 中的所有 indicator 替换成 u00A7（§）用于表示颜色
      * @param indicator u00A7 的替代字符，通常为 &
