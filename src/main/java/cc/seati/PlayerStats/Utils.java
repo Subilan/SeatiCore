@@ -77,6 +77,6 @@ public class Utils {
             case 2 -> "&a";
             case 3 -> "&e";
             default -> "&f";
-        } + index;
+        } + index + "&r";
     }
 }
