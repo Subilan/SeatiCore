@@ -36,7 +36,7 @@ public class CommandInfo extends Command {
 
         Utils.sendMessageCtx(ctx, "&7获取数据中...");
 
-        MutableComponent message = Text.literal("\n&l&e" + targetPlayerName + "&f " + ((Config.getPeriodTag().equals("default")) ? "" : ("在 &b" + Config.getPeriodTag() + "&f ")) + "的统计数据&r\n\n");
+        MutableComponent message = Text.title(Text.literal("&e" + targetPlayerName + "&f " + ((Config.getPeriodTag().equals("default")) ? "" : ("在 &b" + Config.getPeriodTag() + "&f ")) + "的统计数据&r"));
 
         return Utils.tryReturn(() -> {
             PlaytimeRecord playtimeRecord = Utils.waitFor(PlaytimeRecord.from(Database.manager, Config.getPeriodTag(), targetPlayerName));

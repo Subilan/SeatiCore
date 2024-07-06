@@ -58,6 +58,26 @@ public class LoginRecord extends DatabaseRecord {
     }
 
     /**
+     * 获取所有的 Login Record 数据
+     *
+     * @param manager    SQLManager
+     * @return 带有所有玩家 Login 记录 List 的 Future，如果不存在任何登录记录，那么会返回一个空的列表
+     */
+    public static CompletableFuture<List<LoginRecord>> getAll(SQLManager manager) {
+        return getQueryBuilder(manager)
+                .selectColumns("id", "action_type", "created_at", "player")
+                .build()
+                .executeFuture(q -> {
+                    List<LoginRecord> records = new ArrayList<>();
+                    ResultSet rs = q.getResultSet();
+                    while (rs.next()) {
+                        records.add(fromResultSet(rs));
+                    }
+                    return records;
+                });
+    }
+
+    /**
      * 根据从数据库中获取的内容，创建一个 LoginRecord 实例
      *
      * @param id         数据库项

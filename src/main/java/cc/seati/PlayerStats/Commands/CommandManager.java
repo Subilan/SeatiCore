@@ -41,8 +41,18 @@ public class CommandManager {
                 }
                 yield new CommandInfo(inputs[1]).handle(ctx);
             }
+            case "board" -> Utils.tryRun(
+                    () -> new CommandBoard(inputs.length >= 2 ? inputs[1] : "", inputs.length >= 3 ? Integer.parseInt(inputs[2]) : 1).handle(ctx),
+                    e -> {
+                        if (e instanceof NumberFormatException) {
+                            Utils.sendMessageCtx(ctx, "&c页码必须是数字");
+                            return 1;
+                        }
+                        return 0;
+                    }
+            );
             default -> {
-                Utils.sendMessageCtx(ctx, "No handler set for parameter" + action + ".");
+                Utils.sendMessageCtx(ctx, "No handler set for parameter " + action + ".");
                 yield 1;
             }
         };

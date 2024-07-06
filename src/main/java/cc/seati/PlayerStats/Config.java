@@ -13,6 +13,7 @@ public class Config {
     private static final String DATABASE_PASSWORD = "database.password";
     private static final String DATABASE_CONNECTION_TIMEOUT = "database.connection-timeout";
     private static final String PERIOD_TAG = "period-tag";
+    private static final String PAGINATION_PAGE_SIZE = "pagination-page-size";
     public static File configFile;
     public static YamlConfiguration t;
 
@@ -63,5 +64,9 @@ public class Config {
 
     public static String getPeriodTag() {
         return t.getString(PERIOD_TAG, "default");
+    }
+
+    public static int getPaginationPageSize() {
+        return t.getInt(PAGINATION_PAGE_SIZE, 10);
     }
 }
