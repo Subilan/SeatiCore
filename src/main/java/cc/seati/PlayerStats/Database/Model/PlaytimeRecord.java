@@ -39,24 +39,6 @@ public class PlaytimeRecord extends DatabaseRecord {
         this.player = player;
     }
 
-    /**
-     * 验证该记录是否存在
-     *
-     * @param manager SQLManager
-     * @param tag     Period tag
-     * @param player  玩家名称
-     * @return 关于是否存在的布尔值 Future
-     */
-    public static Future<Boolean> isPresent(SQLManager manager, String tag, String player) {
-        return manager.createQuery()
-                .inTable(TABLE_NAME)
-                .addCondition("player", player)
-                .addCondition("tag", tag)
-                .selectColumns("id")
-                .build()
-                .executeFuture(q -> q.getResultSet().next());
-    }
-
     public static Future<List<PlaytimeRecord>> from(SQLManager manager, String tag) {
         return manager.createQuery()
                 .inTable(TABLE_NAME)
