@@ -46,11 +46,16 @@ public class Utils {
      * @param <T> 原函数或异常的返回值类型
      */
     public static <T> T tryReturn(Callable<T> toCall, T returnOnException) {
+        return tryRun(toCall, () -> {}, returnOnException);
+    }
+
+    public static <T> T tryRun(Callable<T> toCall, Runnable runOnException, T returnOnException) {
         try {
             return toCall.call();
         } catch (Exception e) {
             e.printStackTrace();
-            Main.LOGGER.warn("Caught exception.");
+            runOnException.run();
+            Main.LOGGER.warn("Caught exception");
             return returnOnException;
         }
     }
