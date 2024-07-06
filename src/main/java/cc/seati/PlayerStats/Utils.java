@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Utils {
     public static ServerPlayer getServerPlayer(Player p) {
@@ -46,17 +49,16 @@ public class Utils {
      * @param <T> 原函数或异常的返回值类型
      */
     public static <T> T tryReturn(Callable<T> toCall, T returnOnException) {
-        return tryRun(toCall, () -> {}, returnOnException);
+        return tryRun(toCall, e -> returnOnException);
     }
 
-    public static <T> T tryRun(Callable<T> toCall, Runnable runOnException, T returnOnException) {
+    public static <T> T tryRun(Callable<T> toCall, Function<Exception, T> runOnException) {
         try {
             return toCall.call();
         } catch (Exception e) {
             e.printStackTrace();
-            runOnException.run();
             Main.LOGGER.warn("Caught exception");
-            return returnOnException;
+            return runOnException.apply(e);
         }
     }
 
