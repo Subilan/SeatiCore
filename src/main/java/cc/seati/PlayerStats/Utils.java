@@ -68,4 +68,13 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public static String getColoredIndex(int index) {
+        return switch (index) {
+            case 1 -> "&b";
+            case 2 -> "&a";
+            case 3 -> "&e";
+            default -> "&f";
+        } + index;
+    }
 }
