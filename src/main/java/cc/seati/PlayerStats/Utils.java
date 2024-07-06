@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
@@ -20,10 +19,6 @@ public class Utils {
 
     public static Timestamp getCurrentTimestamp() {
         return new Timestamp(new Date().getTime());
-    }
-
-    public static String formatTimestamp(Timestamp timestamp) {
-        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     public static void sendAll(MinecraftServer server, Component component) {

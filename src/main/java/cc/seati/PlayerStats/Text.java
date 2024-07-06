@@ -3,6 +3,9 @@ package cc.seati.PlayerStats;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+
 public class Text {
 
     /**
@@ -36,5 +39,14 @@ public class Text {
         s = seconds % 3600 % 60;
 
         return h + "h" + m + "m" + s + "s";
+    }
+
+    /**
+     * 将指定时间戳转换为 yyyy-MM-dd HH:mm:ss 格式的字符串（本地时间）
+     * @param timestamp 要转换的时间戳
+     * @return 转换后的字符串
+     */
+    public static String formatTimestamp(Timestamp timestamp) {
+        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
