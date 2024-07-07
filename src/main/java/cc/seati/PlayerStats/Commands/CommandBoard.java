@@ -1,11 +1,11 @@
 package cc.seati.PlayerStats.Commands;
 
-import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
-import cc.seati.PlayerStats.Text;
+import cc.seati.PlayerStats.Utils.TextUtil;
 import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
+import cc.seati.PlayerStats.Utils.DBUtil;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;
@@ -38,7 +38,7 @@ public class CommandBoard extends Command {
 
         return switch (this.type) {
             case "total-time", "afk-time", "valid-time", "t", "a", "v" -> CommonUtil.tryReturn(() -> {
-                List<PlaytimeRecord> record = CommonUtil.waitFor(PlaytimeRecord.from(Database.manager, ConfigUtil.getPeriodTag())).stream().sorted(Comparator.comparingInt(switch (this.type) {
+                List<PlaytimeRecord> record = CommonUtil.waitFor(PlaytimeRecord.from(DBUtil.getManager(), ConfigUtil.getPeriodTag())).stream().sorted(Comparator.comparingInt(switch (this.type) {
                     case "total-time", "t" -> PlaytimeRecord::getTotal;
                     case "afk-time", "a" -> PlaytimeRecord::getAfk;
                     case "valid-time", "v" -> PlaytimeRecord::getValidTime;
@@ -61,7 +61,7 @@ public class CommandBoard extends Command {
                 // Note that List.subList accepts the 1st argument as inclusive bound and the 2nd as exclusive bound.
                 List<PlaytimeRecord> sublist = record.subList(fromIndex, toIndex);
 
-                MutableComponent message = Text.title(Text.literal((switch (this.type) {
+                MutableComponent message = TextUtil.title(TextUtil.literal((switch (this.type) {
                     case "total-time", "t" -> "&e总在线时长&f";
                     case "afk-time", "a" -> "&c挂机时长&f";
                     case "valid-time", "v" -> "&a有效时长&f";
@@ -70,8 +70,8 @@ public class CommandBoard extends Command {
 
                 AtomicInteger index = new AtomicInteger(1);
                 sublist.forEach(value -> {
-                    message.append(Text.literal(
-                            "[" + (this.type.equals("valid-time") || this.type.equals("v") ? CommonUtil.getColoredIndex(index.get()) : index.toString()) + "] " + value.getPlayer() + " &7-&f " + Text.formatSeconds(switch (this.type) {
+                    message.append(TextUtil.literal(
+                            "[" + (this.type.equals("valid-time") || this.type.equals("v") ? CommonUtil.getColoredIndex(index.get()) : index.toString()) + "] " + value.getPlayer() + " &7-&f " + TextUtil.formatSeconds(switch (this.type) {
                                 case "total-time", "t" -> value.getTotal();
                                 case "afk-time", "a" -> value.getAfk();
                                 case "valid-time", "v" -> value.getValidTime();
@@ -81,14 +81,14 @@ public class CommandBoard extends Command {
                     index.addAndGet(1);
                 });
 
-                message.append(Text.literal("\n&7第 &e" + page + "&7/" + maximumPage + " 页"));
+                message.append(TextUtil.literal("\n&7第 &e" + page + "&7/" + maximumPage + " 页"));
 
                 ctx.getSource().sendSystemMessage(message);
                 return 1;
             }, 0);
 
             case "login" -> CommonUtil.tryReturn(() -> {
-                Map<String, Integer> records = CommonUtil.waitFor(LoginRecord.getAll(Database.manager))
+                Map<String, Integer> records = CommonUtil.waitFor(LoginRecord.getAll(DBUtil.getManager()))
                         // Stream 1: Filter only logging-in records, group the login records by playername, creating Map<String, List<LoginRecord>>
                         .stream()
                         .filter(LoginRecord::isLogin)
@@ -111,7 +111,7 @@ public class CommandBoard extends Command {
                     return 1;
                 }
 
-                MutableComponent message = Text.title(Text.literal("&e登录次数&f排行榜"));
+                MutableComponent message = TextUtil.title(TextUtil.literal("&e登录次数&f排行榜"));
 
                 List<String> keyList =  records.keySet().stream().toList();
 
@@ -123,13 +123,13 @@ public class CommandBoard extends Command {
 
                 AtomicInteger index = new AtomicInteger(1);
                 keyList.subList(fromIndex, toIndex).forEach(playername -> {
-                    message.append(Text.literal(
+                    message.append(TextUtil.literal(
                             "[" + CommonUtil.getColoredIndex(index.get()) + "] " + playername + " &7-&f " + records.get(playername) + "\n"
                     ));
                     index.getAndIncrement();
                 });
 
-                message.append(Text.literal("\n&7第 &e" + page + "&7/" + maximumPage + " 页"));
+                message.append(TextUtil.literal("\n&7第 &e" + page + "&7/" + maximumPage + " 页"));
 
                 ctx.getSource().sendSystemMessage(message);
                 return 1;

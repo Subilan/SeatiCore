@@ -11,12 +11,13 @@ import org.apache.logging.log4j.Logger;
 public final class Main {
     public static final String MOD_ID = "playerstats";
     public static final Logger LOGGER = LogManager.getLogger("PlayerStats");
-    public static final LocalData config = new LocalData("playerstats");
+    public static LocalData config;
+    public static Database database;
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing PlayerStats...");
-            Database.init();
-            LOGGER.info("Initialization end.");
+            config = new LocalData("playerstats");
+            database = new Database();
         });
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {
             LOGGER.warn("Invalid dist. This mod can only be enabled on server side.");

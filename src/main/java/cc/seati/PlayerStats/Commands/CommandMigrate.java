@@ -3,6 +3,7 @@ package cc.seati.PlayerStats.Commands;
 import cc.seati.PlayerStats.Database.DataTables;
 import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Utils.CommonUtil;
+import cc.seati.PlayerStats.Utils.DBUtil;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 
@@ -27,7 +28,7 @@ public class CommandMigrate extends Command {
             return 1;
         }
 
-        Database.manager.createUpdate(this.table)
+        DBUtil.getManager().createUpdate(this.table)
                 .addCondition("player", this.from)
                 .setColumnValues("player", this.to)
                 .build()

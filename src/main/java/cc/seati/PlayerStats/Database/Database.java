@@ -8,11 +8,11 @@ import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
 
 public class Database {
-    public static HikariConfig config = new HikariConfig();
-    public static SQLManager manager;
-    public static boolean isValid = false;
+    public HikariConfig config = new HikariConfig();
+    public SQLManager manager;
+    public boolean isValid = false;
 
-    public static void init() {
+    public Database() {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/playerstats");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setUsername(ConfigUtil.getDatabaseUsername());

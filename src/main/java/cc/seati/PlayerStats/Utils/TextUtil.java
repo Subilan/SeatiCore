@@ -1,4 +1,4 @@
-package cc.seati.PlayerStats;
+package cc.seati.PlayerStats.Utils;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -6,7 +6,7 @@ import net.minecraft.network.chat.MutableComponent;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 
-public class Text {
+public class TextUtil {
 
     /**
      * 利用替换后的字符串创建 MutableComponent
