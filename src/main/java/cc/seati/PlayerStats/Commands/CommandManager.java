@@ -11,6 +11,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
+import java.util.Optional;
+
 public class CommandManager {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> command =
@@ -37,7 +39,7 @@ public class CommandManager {
             case "reload" -> new CommandReload().handle(ctx);
             case "info" -> {
                 if (inputs.length == 1) {
-                    yield new CommandInfo().handle(ctx);
+                    yield new CommandInfo("").handle(ctx);
                 }
                 yield new CommandInfo(inputs[1]).handle(ctx);
             }
@@ -51,6 +53,13 @@ public class CommandManager {
                         return 0;
                     }
             );
+            case "migrate" -> {
+                if (inputs.length < 4) {
+                    Utils.sendMessage(ctx, "&c参数不足");
+                    yield 1;
+                }
+                yield new CommandMigrate(inputs[1], inputs[2], inputs[3]).handle(ctx);
+            }
             default -> {
                 Utils.sendMessage(ctx, "No handler set for parameter " + action + ".");
                 yield 1;
