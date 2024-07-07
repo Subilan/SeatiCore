@@ -37,9 +37,9 @@ public class TextUtil {
      * @return 格式化以后的字符串。例如 72800 格式化后为 20h13m20s
      */
     public static String formatSeconds(int seconds) {
-        double h, m, s;
-        h = Math.floor(seconds / 3600d);
-        m = Math.floor(seconds % 3600 / 60d);
+        int h, m, s;
+        h = (int) Math.floor(seconds / 3600d);
+        m = (int) Math.floor(seconds % 3600 / 60d);
         s = seconds % 3600 % 60;
 
         return h + "h" + m + "m" + s + "s";
