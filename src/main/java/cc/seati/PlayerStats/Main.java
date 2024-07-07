@@ -1,6 +1,7 @@
 package cc.seati.PlayerStats;
 
 import cc.seati.PlayerStats.Database.Database;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -13,10 +14,14 @@ public final class Main {
     public static final Logger LOGGER = LogManager.getLogger("PlayerStats");
     public static LocalData config;
     public static Database database;
+    public static LocalData ranks;
+    public static MinecraftServer server;
+
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing PlayerStats...");
             config = new LocalData("playerstats");
+            ranks = new LocalData("playerstats-ranks");
             database = new Database();
         });
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {

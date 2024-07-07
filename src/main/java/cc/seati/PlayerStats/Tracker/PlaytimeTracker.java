@@ -1,26 +1,29 @@
 package cc.seati.PlayerStats.Tracker;
 
 import cc.carm.lib.easysql.api.SQLManager;
-import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
 import cc.seati.PlayerStats.Main;
 import cc.seati.PlayerStats.Utils.CommonUtil;
-import net.minecraft.ChatFormatting;
+import cc.seati.PlayerStats.Utils.ConfigUtil;
+import cc.seati.PlayerStats.Utils.RankUtil;
+import cc.seati.PlayerStats.Utils.TextUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public final class PlaytimeTracker {
     private final ServerPlayer targetPlayer;
+    private final String targetPlayerName;
     private final ScheduledExecutorService timerExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService afkExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService saveExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -34,6 +37,7 @@ public final class PlaytimeTracker {
 
     public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
+        this.targetPlayerName = forPlayer.getName().getString();
         this.manager = manager;
         CommonUtil.tryExec(() -> {
             this.record = CommonUtil.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true));
@@ -119,22 +123,32 @@ public final class PlaytimeTracker {
             }
         }, 0, 1, TimeUnit.SECONDS);
 
-        rankExecutor.scheduleAtFixedRate(() -> {
-            
-        }, 0, 1, TimeUnit.SECONDS);
+        if (ConfigUtil.getEnableFTBRanksIntegration()) {
+            Main.LOGGER.info("FTB Ranks integration is enabled. Starting rank executor for player.");
+            rankExecutor.scheduleAtFixedRate(() -> {
+                Map<String, Integer> mapRequirements = ConfigUtil.getRankRequirements();
+                for (Map.Entry<String, Integer> entry : mapRequirements.entrySet()) {
+                    if (record.getValidTime() >= entry.getValue()) if (!RankUtil.hasRank(this.targetPlayerName, entry.getKey())) {
+                        if (RankUtil.setRank(this.targetPlayerName, entry.getKey(), true)) {
+                            Main.LOGGER.info("Player " + this.targetPlayerName + " exceeds playtime at " + TextUtil.formatSeconds(entry.getValue()) + ", adding rank " + entry.getKey() + ".");
+                            targetPlayer.sendSystemMessage(TextUtil.literal("&e你的&a有效游玩时间&e已经达到 &b" + TextUtil.formatSeconds(entry.getValue()) + "&e，获得权限组 &b" + entry.getKey() + "&e！"));
+                        }
+                    }
+                }
+            }, 0, 1, TimeUnit.SECONDS);
+        }
     }
 
     public static MutableComponent getAFKMessageComponent(Player targetPlayer) {
-        return Component.literal(
-                ConfigUtil.getAfkMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString())
-        ).setStyle(Style.EMPTY.withColor(
-                TextColor.fromLegacyFormat(ChatFormatting.GRAY)
-        ));
+        return TextUtil.literal("&7" + ConfigUtil.getAfkMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString()));
     }
 
     public void shutdown() {
         this.timerExecutor.shutdown();
         this.afkExecutor.shutdown();
         this.saveExecutor.shutdown();
+        if (ConfigUtil.getEnableFTBRanksIntegration()) {
+            this.rankExecutor.shutdown();
+        }
     }
 }

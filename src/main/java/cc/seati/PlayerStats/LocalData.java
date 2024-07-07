@@ -28,11 +28,11 @@ public class LocalData {
             e.printStackTrace();
         }
         t = YamlConfiguration.loadConfiguration(dist);
-        Main.LOGGER.info("Initialized configuration");
+        Main.LOGGER.info("Initialized " + filename + ".yml");
     }
 
     public void reload() {
         this.init();
-        Main.LOGGER.info("Reloaded configuration.");
+        Main.LOGGER.info("Reloaded " + filename + ".yml");
     }
 }

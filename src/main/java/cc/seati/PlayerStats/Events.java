@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -47,5 +48,10 @@ public class Events {
     public static void onRegisterCommand(RegisterCommandsEvent e) {
         CommandDispatcher<CommandSourceStack> dispatcher = e.getDispatcher();
         CommandManager.register(dispatcher);
+    }
+
+    @SubscribeEvent
+    public static void onServerStarted(ServerStartedEvent e) {
+        Main.server = e.getServer();
     }
 }
