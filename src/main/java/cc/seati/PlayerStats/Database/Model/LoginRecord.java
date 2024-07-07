@@ -19,20 +19,22 @@ public class LoginRecord extends DatabaseRecord {
     private int actionTypeValue;
     private Timestamp createdAt;
     private final String player;
+    private final String tag;
 
     public static LoginRecord fromResultSet(ResultSet rs) throws SQLException {
         return new LoginRecord(
                 rs.getInt("id"),
                 rs.getBoolean("action_type"),
                 rs.getTimestamp("created_at"),
-                rs.getString("player")
+                rs.getString("player"),
+                rs.getString("tag")
         );
     }
 
     public static TableQueryBuilder getQueryBuilder(SQLManager manager) {
         return manager.createQuery()
                 .inTable(TABLE_NAME)
-                .selectColumns("id", "action_type", "created_at", "player");
+                .selectColumns("id", "action_type", "created_at", "player", "tag");
     }
 
     /**
@@ -45,7 +47,7 @@ public class LoginRecord extends DatabaseRecord {
     public static CompletableFuture<List<LoginRecord>> from(SQLManager manager, String playername) {
         return getQueryBuilder(manager)
                 .addCondition("player", playername)
-                .selectColumns("id", "action_type", "created_at", "player")
+                .selectColumns("id", "action_type", "created_at", "player", "tag")
                 .build()
                 .executeFuture(q -> {
                     List<LoginRecord> records = new ArrayList<>();
@@ -60,12 +62,12 @@ public class LoginRecord extends DatabaseRecord {
     /**
      * 获取所有的 Login Record 数据
      *
-     * @param manager    SQLManager
+     * @param manager SQLManager
      * @return 带有所有玩家 Login 记录 List 的 Future，如果不存在任何登录记录，那么会返回一个空的列表
      */
     public static CompletableFuture<List<LoginRecord>> getAll(SQLManager manager) {
         return getQueryBuilder(manager)
-                .selectColumns("id", "action_type", "created_at", "player")
+                .selectColumns("id", "action_type", "created_at", "player", "tag")
                 .build()
                 .executeFuture(q -> {
                     List<LoginRecord> records = new ArrayList<>();
@@ -84,13 +86,15 @@ public class LoginRecord extends DatabaseRecord {
      * @param actionType 数据库项
      * @param createdAt  数据库项
      * @param player     数据库项
+     * @param tag      数据库项
      */
-    public LoginRecord(int id, boolean actionType, Timestamp createdAt, String player) {
+    public LoginRecord(int id, boolean actionType, Timestamp createdAt, String player, String tag) {
         this.id = id;
         this.actionType = actionType ? LoginRecordActionType.LOGIN : LoginRecordActionType.LOGOUT;
         this.createdAt = createdAt;
         this.player = player;
         this.associate = true;
+        this.tag = tag;
     }
 
     /**
@@ -99,10 +103,11 @@ public class LoginRecord extends DatabaseRecord {
      * @param actionType 枚举类型表示的登录或者登出
      * @param player     玩家名称
      */
-    public LoginRecord(LoginRecordActionType actionType, String player) {
+    public LoginRecord(LoginRecordActionType actionType, String player, String tag) {
         this.actionType = actionType;
         this.actionTypeValue = actionType.value;
         this.player = player;
+        this.tag = tag;
     }
 
     /**
@@ -112,8 +117,8 @@ public class LoginRecord extends DatabaseRecord {
      */
     public void saveAsync(SQLManager manager) {
         manager.createInsert(TABLE_NAME)
-                .setColumnNames("action_type", "player")
-                .setParams(this.actionTypeValue, this.player)
+                .setColumnNames("action_type", "player", "tag")
+                .setParams(this.actionTypeValue, this.player, this.tag)
                 .executeAsync(q -> {
                     this.associate = true;
                 }, (e, a) -> {
@@ -140,5 +145,9 @@ public class LoginRecord extends DatabaseRecord {
 
     public Timestamp getTime() {
         return this.createdAt;
+    }
+
+    public String getTag() {
+        return this.tag;
     }
 }

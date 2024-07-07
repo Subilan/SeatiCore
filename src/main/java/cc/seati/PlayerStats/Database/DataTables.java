@@ -16,6 +16,7 @@ public enum DataTables implements SQLTable {
         table.addAutoIncrementColumn("id", true);
         table.addColumn("action_type", "BOOLEAN NOT NULL COMMENT '1 for login, 0 for logout'");
         table.addColumn("created_at", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+        table.addColumn("tag", "VARCHAR(20) NOT NULL");
         table.addColumn("player", "VARCHAR(20) NOT NULL");
     }),
 
@@ -50,7 +51,6 @@ public enum DataTables implements SQLTable {
      *
      * @param sqlManager SQLManager 实例
      * @return 是否创建成功
-     * @throws SQLException 如果数据库操作出现问题，抛出 SQLException
      */
     @Override
     public boolean create(@NotNull SQLManager sqlManager) {
