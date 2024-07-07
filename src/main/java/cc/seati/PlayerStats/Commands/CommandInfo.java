@@ -17,10 +17,6 @@ public class CommandInfo extends Command {
 
     public final String targetPlayer;
 
-    public CommandInfo() {
-        this.targetPlayer = "";
-    }
-
     public CommandInfo(String targetPlayer) {
         this.targetPlayer = targetPlayer;
     }
