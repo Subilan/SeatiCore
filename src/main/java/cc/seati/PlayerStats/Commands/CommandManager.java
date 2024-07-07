@@ -37,12 +37,7 @@ public class CommandManager {
         String action = inputs[0];
         return switch (action) {
             case "reload" -> new CommandReload().handle(ctx);
-            case "info" -> {
-                if (inputs.length == 1) {
-                    yield new CommandInfo("").handle(ctx);
-                }
-                yield new CommandInfo(inputs[1]).handle(ctx);
-            }
+            case "info" -> new CommandInfo(inputs.length == 1 ? "" : inputs[1]).handle(ctx);
             case "board" -> Utils.tryRun(
                     () -> new CommandBoard(inputs.length >= 2 ? inputs[1] : "", inputs.length >= 3 ? Integer.parseInt(inputs[2]) : 1).handle(ctx),
                     e -> {
