@@ -15,7 +15,7 @@ import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.Function;
 
-public class Common {
+public class CommonUtil {
     public static ServerPlayer getServerPlayer(Player p) {
         return Objects.requireNonNull(p.getServer()).getPlayerList().getPlayer(p.getUUID());
     }

@@ -1,6 +1,6 @@
 package cc.seati.PlayerStats.Commands;
 
-import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -28,7 +28,7 @@ public class CommandManager {
         String input = StringArgumentType.getString(ctx, "input");
         String[] inputs = input.split(" ");
         if (inputs.length == 0) {
-            Common.sendMessage(ctx, "Not enough argument.");
+            CommonUtil.sendMessage(ctx, "Not enough argument.");
             return 0;
         }
 
@@ -36,11 +36,11 @@ public class CommandManager {
         return switch (action) {
             case "reload" -> new CommandReload().handle(ctx);
             case "info" -> new CommandInfo(inputs.length == 1 ? "" : inputs[1]).handle(ctx);
-            case "board" -> Common.tryRun(
+            case "board" -> CommonUtil.tryRun(
                     () -> new CommandBoard(inputs.length >= 2 ? inputs[1] : "", inputs.length >= 3 ? Integer.parseInt(inputs[2]) : 1).handle(ctx),
                     e -> {
                         if (e instanceof NumberFormatException) {
-                            Common.sendMessage(ctx, "&c页码必须是数字");
+                            CommonUtil.sendMessage(ctx, "&c页码必须是数字");
                             return 1;
                         }
                         return 0;
@@ -48,13 +48,13 @@ public class CommandManager {
             );
             case "migrate" -> {
                 if (inputs.length < 4) {
-                    Common.sendMessage(ctx, "&c参数不足");
+                    CommonUtil.sendMessage(ctx, "&c参数不足");
                     yield 1;
                 }
                 yield new CommandMigrate(inputs[1], inputs[2], inputs[3]).handle(ctx);
             }
             default -> {
-                Common.sendMessage(ctx, "No handler set for parameter " + action + ".");
+                CommonUtil.sendMessage(ctx, "No handler set for parameter " + action + ".");
                 yield 1;
             }
         };

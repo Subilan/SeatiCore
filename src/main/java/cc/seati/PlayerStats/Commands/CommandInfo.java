@@ -4,7 +4,7 @@ import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
 import cc.seati.PlayerStats.Text;
-import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,18 +24,18 @@ public class CommandInfo extends Command {
     @Override
     public int handle(CommandContext<CommandSourceStack> ctx) {
         if (!ctx.getSource().isPlayer() && this.targetPlayer.isEmpty()) {
-            Common.sendMessage(ctx, "This command can only be executed by player.");
+            CommonUtil.sendMessage(ctx, "This command can only be executed by player.");
             return 1;
         }
 
         String targetPlayerName = this.targetPlayer.isEmpty() ? Objects.requireNonNull(ctx.getSource().getPlayer()).getName().getString() : this.targetPlayer;
 
-        Common.sendMessage(ctx, "&7获取数据中...");
+        CommonUtil.sendMessage(ctx, "&7获取数据中...");
 
         MutableComponent message = Text.title(Text.literal("&e" + targetPlayerName + "&f " + ((ConfigUtil.getPeriodTag().equals("default")) ? "" : ("在 &b" + ConfigUtil.getPeriodTag() + "&f ")) + "的统计数据&r"));
 
-        return Common.tryReturn(() -> {
-            PlaytimeRecord playtimeRecord = Common.waitFor(PlaytimeRecord.from(Database.manager, ConfigUtil.getPeriodTag(), targetPlayerName));
+        return CommonUtil.tryReturn(() -> {
+            PlaytimeRecord playtimeRecord = CommonUtil.waitFor(PlaytimeRecord.from(Database.manager, ConfigUtil.getPeriodTag(), targetPlayerName));
             if (playtimeRecord != null) {
                 message.append(
                         Text.literal(
@@ -46,7 +46,7 @@ public class CommandInfo extends Command {
                 );
             }
 
-            List<LoginRecord> loginRecords = Common.waitFor(LoginRecord.from(Database.manager, targetPlayerName));
+            List<LoginRecord> loginRecords = CommonUtil.waitFor(LoginRecord.from(Database.manager, targetPlayerName));
             int loginSum = loginRecords.stream().filter(LoginRecord::isLogin).toList().size();
             if (loginSum > 0) {
                 message.append(

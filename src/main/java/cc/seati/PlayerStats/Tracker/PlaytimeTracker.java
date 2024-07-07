@@ -4,7 +4,7 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
 import cc.seati.PlayerStats.Main;
-import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,8 +35,8 @@ public final class PlaytimeTracker {
     public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
         this.manager = manager;
-        Common.tryExec(() -> {
-            this.record = Common.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true));
+        CommonUtil.tryExec(() -> {
+            this.record = CommonUtil.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true));
             return null;
         });
     }
@@ -114,7 +114,7 @@ public final class PlaytimeTracker {
 
                 // Broadcast AFK message
                 // Note: PlayerList#broadcastChatMessage is not suitable for this case.
-                if (this.afkMessageReady) Common.sendAll(targetPlayer.getServer(), getAFKMessageComponent(targetPlayer));
+                if (this.afkMessageReady) CommonUtil.sendAll(targetPlayer.getServer(), getAFKMessageComponent(targetPlayer));
                 this.afkMessageReady = false;
             }
         }, 0, 1, TimeUnit.SECONDS);

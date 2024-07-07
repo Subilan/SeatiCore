@@ -4,7 +4,7 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
 import cc.seati.PlayerStats.Main;
-import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,7 @@ public enum DataTables implements SQLTable {
 
         TableCreateBuilder tableBuilder = sqlManager.createTable(getTableName());
         if (builder != null) builder.accept(tableBuilder);
-        return Common.tryReturn(() -> {
+        return CommonUtil.tryReturn(() -> {
             tableBuilder.build().execute();
             return true;
         }, false);

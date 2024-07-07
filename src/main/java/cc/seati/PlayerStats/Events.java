@@ -6,7 +6,7 @@ import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
 import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.LoginRecordActionType;
-import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,7 +25,7 @@ public class Events {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
-        ServerPlayer player = Common.getServerPlayer(e.getEntity());
+        ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
         PlaytimeTracker tracer = new PlaytimeTracker(player, Database.manager);
         tracer.run();
         playtimeTracerMap.put(player, tracer);
@@ -35,7 +35,7 @@ public class Events {
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
-        ServerPlayer player = Common.getServerPlayer(e.getEntity());
+        ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
         Main.LOGGER.info("Shutting down playtime tracer for player " + player.getName().getString());

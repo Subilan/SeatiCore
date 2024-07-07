@@ -4,7 +4,7 @@ import cc.carm.lib.easysql.EasySQL;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.hikari.HikariConfig;
 import cc.seati.PlayerStats.Main;
-import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
 
 public class Database {
@@ -19,7 +19,7 @@ public class Database {
         config.setPassword(ConfigUtil.getDatabasePassword());
         manager = EasySQL.createManager(config);
 
-        Common.tryExec(() -> {
+        CommonUtil.tryExec(() -> {
             if (
                     !manager.getConnection().isValid(
                             ConfigUtil.getDatabaseConnectionTimeout()
