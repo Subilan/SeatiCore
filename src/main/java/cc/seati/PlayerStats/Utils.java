@@ -11,9 +11,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class Utils {
     public static ServerPlayer getServerPlayer(Player p) {
@@ -33,7 +31,7 @@ public class Utils {
                 );
     }
 
-    public static void sendMessageCtx(CommandContext<CommandSourceStack> ctx, String message) {
+    public static void sendMessage(CommandContext<CommandSourceStack> ctx, String message) {
         ctx.getSource().sendSystemMessage(Text.literal(message));
     }
 

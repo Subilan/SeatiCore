@@ -9,7 +9,6 @@ import cc.seati.PlayerStats.Utils;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,10 +27,10 @@ public class CommandBoard extends Command {
 
     @Override
     public int handle(CommandContext<CommandSourceStack> ctx) {
-        Utils.sendMessageCtx(ctx, "&7获取数据中...");
+        Utils.sendMessage(ctx, "&7获取数据中...");
 
         if (this.page <= 0) {
-            Utils.sendMessageCtx(ctx, "&c无效页码");
+            Utils.sendMessage(ctx, "&c无效页码");
             return 1;
         }
 
@@ -47,7 +46,7 @@ public class CommandBoard extends Command {
                 }).reversed()).toList();
 
                 if (record.isEmpty()) {
-                    Utils.sendMessageCtx(ctx, "&7暂无相关数据");
+                    Utils.sendMessage(ctx, "&7暂无相关数据");
                     return 1;
                 }
 
@@ -55,7 +54,7 @@ public class CommandBoard extends Command {
                 int toIndex = Math.min(pageSize * page, record.size());
 
                 if (fromIndex > record.size() - 1) {
-                    Utils.sendMessageCtx(ctx, "&7此页不存在");
+                    Utils.sendMessage(ctx, "&7此页不存在");
                     return 1;
                 }
 
@@ -108,7 +107,7 @@ public class CommandBoard extends Command {
                 int toIndex = Math.min(pageSize * page, records.size());
 
                 if (fromIndex > records.size() - 1) {
-                    Utils.sendMessageCtx(ctx, "&7此页不存在");
+                    Utils.sendMessage(ctx, "&7此页不存在");
                     return 1;
                 }
 
@@ -118,7 +117,7 @@ public class CommandBoard extends Command {
 
                 // To prevent IndexOutOfBoundsException
                 if (toIndex > keyList.size()) {
-                    Utils.sendMessageCtx(ctx, "&7此页不存在");
+                    Utils.sendMessage(ctx, "&7此页不存在");
                     return 1;
                 }
 
@@ -137,7 +136,7 @@ public class CommandBoard extends Command {
             }, 0);
 
             default -> {
-                Utils.sendMessageCtx(ctx, "&7没有对应的排行榜数据");
+                Utils.sendMessage(ctx, "&7没有对应的排行榜数据");
                 yield 1;
             }
         };

@@ -28,7 +28,7 @@ public class CommandManager {
         String input = StringArgumentType.getString(ctx, "input");
         String[] inputs = input.split(" ");
         if (inputs.length == 0) {
-            Utils.sendMessageCtx(ctx, "Not enough argument.");
+            Utils.sendMessage(ctx, "Not enough argument.");
             return 0;
         }
 
@@ -45,14 +45,14 @@ public class CommandManager {
                     () -> new CommandBoard(inputs.length >= 2 ? inputs[1] : "", inputs.length >= 3 ? Integer.parseInt(inputs[2]) : 1).handle(ctx),
                     e -> {
                         if (e instanceof NumberFormatException) {
-                            Utils.sendMessageCtx(ctx, "&c页码必须是数字");
+                            Utils.sendMessage(ctx, "&c页码必须是数字");
                             return 1;
                         }
                         return 0;
                     }
             );
             default -> {
-                Utils.sendMessageCtx(ctx, "No handler set for parameter " + action + ".");
+                Utils.sendMessage(ctx, "No handler set for parameter " + action + ".");
                 yield 1;
             }
         };

@@ -28,13 +28,13 @@ public class CommandInfo extends Command {
     @Override
     public int handle(CommandContext<CommandSourceStack> ctx) {
         if (!ctx.getSource().isPlayer() && this.targetPlayer.isEmpty()) {
-            Utils.sendMessageCtx(ctx, "This command can only be executed by player.");
+            Utils.sendMessage(ctx, "This command can only be executed by player.");
             return 1;
         }
 
         String targetPlayerName = this.targetPlayer.isEmpty() ? Objects.requireNonNull(ctx.getSource().getPlayer()).getName().getString() : this.targetPlayer;
 
-        Utils.sendMessageCtx(ctx, "&7获取数据中...");
+        Utils.sendMessage(ctx, "&7获取数据中...");
 
         MutableComponent message = Text.title(Text.literal("&e" + targetPlayerName + "&f " + ((Config.getPeriodTag().equals("default")) ? "" : ("在 &b" + Config.getPeriodTag() + "&f ")) + "的统计数据&r"));
 
