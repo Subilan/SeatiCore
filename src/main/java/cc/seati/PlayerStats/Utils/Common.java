@@ -1,5 +1,7 @@
-package cc.seati.PlayerStats;
+package cc.seati.PlayerStats.Utils;
 
+import cc.seati.PlayerStats.Main;
+import cc.seati.PlayerStats.Text;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -13,7 +15,7 @@ import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.Function;
 
-public class Utils {
+public class Common {
     public static ServerPlayer getServerPlayer(Player p) {
         return Objects.requireNonNull(p.getServer()).getPlayerList().getPlayer(p.getUUID());
     }

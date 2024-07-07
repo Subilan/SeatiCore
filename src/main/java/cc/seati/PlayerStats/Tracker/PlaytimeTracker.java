@@ -1,10 +1,10 @@
 package cc.seati.PlayerStats.Tracker;
 
 import cc.carm.lib.easysql.api.SQLManager;
-import cc.seati.PlayerStats.Config;
+import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
 import cc.seati.PlayerStats.Main;
-import cc.seati.PlayerStats.Utils;
+import cc.seati.PlayerStats.Utils.Common;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -24,6 +24,7 @@ public final class PlaytimeTracker {
     private final ScheduledExecutorService timerExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService afkExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService saveExecutor = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService rankExecutor = Executors.newSingleThreadScheduledExecutor();
     private boolean isAFK = false;
     private boolean afkMessageReady = false;
     private int afkBufferTime = 0;
@@ -34,8 +35,8 @@ public final class PlaytimeTracker {
     public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
         this.manager = manager;
-        Utils.tryExec(() -> {
-            this.record = Utils.waitFor(PlaytimeRecord.from(manager, Config.getPeriodTag(), forPlayer.getName().getString(), true));
+        Common.tryExec(() -> {
+            this.record = Common.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true));
             return null;
         });
     }
@@ -100,28 +101,32 @@ public final class PlaytimeTracker {
             playerPositionData = newData;
 
             // If buffer time exceeds the threshold of kicking, just disconnect the player with a reason.
-            if (this.afkBufferTime >= Config.getAfkKickThreshold()) {
-                this.targetPlayer.connection.disconnect(Component.literal("You have been in AFK state for too long (over " + Config.getAfkKickThreshold() + " seconds!)"));
+            if (this.afkBufferTime >= ConfigUtil.getAfkKickThreshold()) {
+                this.targetPlayer.connection.disconnect(Component.literal("You have been in AFK state for too long (over " + ConfigUtil.getAfkKickThreshold() + " seconds!)"));
                 this.shutdown();
             }
 
             // If buffer time exceeds the threshold of notification, make isAFK true
             // The afk time will start to increase.
             // And a message will be broadcast.
-            if (this.afkBufferTime >= Config.getAfkNotifyThreshold()) {
+            if (this.afkBufferTime >= ConfigUtil.getAfkNotifyThreshold()) {
                 this.isAFK = true;
 
                 // Broadcast AFK message
                 // Note: PlayerList#broadcastChatMessage is not suitable for this case.
-                if (this.afkMessageReady) Utils.sendAll(targetPlayer.getServer(), getAFKMessageComponent(targetPlayer));
+                if (this.afkMessageReady) Common.sendAll(targetPlayer.getServer(), getAFKMessageComponent(targetPlayer));
                 this.afkMessageReady = false;
             }
+        }, 0, 1, TimeUnit.SECONDS);
+
+        rankExecutor.scheduleAtFixedRate(() -> {
+            
         }, 0, 1, TimeUnit.SECONDS);
     }
 
     public static MutableComponent getAFKMessageComponent(Player targetPlayer) {
         return Component.literal(
-                Config.getAfkMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString())
+                ConfigUtil.getAfkMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString())
         ).setStyle(Style.EMPTY.withColor(
                 TextColor.fromLegacyFormat(ChatFormatting.GRAY)
         ));

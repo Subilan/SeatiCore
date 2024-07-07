@@ -2,7 +2,7 @@ package cc.seati.PlayerStats.Database.Model;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.PlayerStats.Database.DataTables;
-import cc.seati.PlayerStats.Utils;
+import cc.seati.PlayerStats.Utils.Common;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
@@ -118,7 +118,7 @@ public class PlaytimeRecord extends DatabaseRecord {
      * @param manager SQLManager
      */
     public void saveSync(SQLManager manager) {
-        Utils.tryExec(() -> {
+        Common.tryExec(() -> {
             manager.createUpdate(TABLE_NAME)
                     .addCondition("player", this.player)
                     .addCondition("tag", this.tag)
@@ -172,11 +172,11 @@ public class PlaytimeRecord extends DatabaseRecord {
 
     public void increaseAfk() {
         this.afk += 1;
-        this.updatedAt = Utils.getCurrentTimestamp();
+        this.updatedAt = Common.getCurrentTimestamp();
     }
 
     public void increaseTotal() {
         this.total += 1;
-        this.updatedAt = Utils.getCurrentTimestamp();
+        this.updatedAt = Common.getCurrentTimestamp();
     }
 }

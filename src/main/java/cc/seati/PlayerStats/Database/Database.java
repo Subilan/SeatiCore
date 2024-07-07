@@ -3,9 +3,9 @@ package cc.seati.PlayerStats.Database;
 import cc.carm.lib.easysql.EasySQL;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.hikari.HikariConfig;
-import cc.seati.PlayerStats.Config;
 import cc.seati.PlayerStats.Main;
-import cc.seati.PlayerStats.Utils;
+import cc.seati.PlayerStats.Utils.Common;
+import cc.seati.PlayerStats.Utils.ConfigUtil;
 
 public class Database {
     public static HikariConfig config = new HikariConfig();
@@ -15,14 +15,14 @@ public class Database {
     public static void init() {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/playerstats");
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        config.setUsername(Config.getDatabaseUsername());
-        config.setPassword(Config.getDatabasePassword());
+        config.setUsername(ConfigUtil.getDatabaseUsername());
+        config.setPassword(ConfigUtil.getDatabasePassword());
         manager = EasySQL.createManager(config);
 
-        Utils.tryExec(() -> {
+        Common.tryExec(() -> {
             if (
                     !manager.getConnection().isValid(
-                            Config.getDatabaseConnectionTimeout()
+                            ConfigUtil.getDatabaseConnectionTimeout()
                     )
             ) {
                 Main.LOGGER.info("Database connection timeout.");

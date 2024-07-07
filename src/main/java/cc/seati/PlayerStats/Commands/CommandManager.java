@@ -1,6 +1,6 @@
 package cc.seati.PlayerStats.Commands;
 
-import cc.seati.PlayerStats.Utils;
+import cc.seati.PlayerStats.Utils.Common;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -10,8 +10,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-
-import java.util.Optional;
 
 public class CommandManager {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -30,7 +28,7 @@ public class CommandManager {
         String input = StringArgumentType.getString(ctx, "input");
         String[] inputs = input.split(" ");
         if (inputs.length == 0) {
-            Utils.sendMessage(ctx, "Not enough argument.");
+            Common.sendMessage(ctx, "Not enough argument.");
             return 0;
         }
 
@@ -38,11 +36,11 @@ public class CommandManager {
         return switch (action) {
             case "reload" -> new CommandReload().handle(ctx);
             case "info" -> new CommandInfo(inputs.length == 1 ? "" : inputs[1]).handle(ctx);
-            case "board" -> Utils.tryRun(
+            case "board" -> Common.tryRun(
                     () -> new CommandBoard(inputs.length >= 2 ? inputs[1] : "", inputs.length >= 3 ? Integer.parseInt(inputs[2]) : 1).handle(ctx),
                     e -> {
                         if (e instanceof NumberFormatException) {
-                            Utils.sendMessage(ctx, "&c页码必须是数字");
+                            Common.sendMessage(ctx, "&c页码必须是数字");
                             return 1;
                         }
                         return 0;
@@ -50,13 +48,13 @@ public class CommandManager {
             );
             case "migrate" -> {
                 if (inputs.length < 4) {
-                    Utils.sendMessage(ctx, "&c参数不足");
+                    Common.sendMessage(ctx, "&c参数不足");
                     yield 1;
                 }
                 yield new CommandMigrate(inputs[1], inputs[2], inputs[3]).handle(ctx);
             }
             default -> {
-                Utils.sendMessage(ctx, "No handler set for parameter " + action + ".");
+                Common.sendMessage(ctx, "No handler set for parameter " + action + ".");
                 yield 1;
             }
         };

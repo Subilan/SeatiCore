@@ -2,7 +2,7 @@ package cc.seati.PlayerStats.Commands;
 
 import cc.seati.PlayerStats.Database.DataTables;
 import cc.seati.PlayerStats.Database.Database;
-import cc.seati.PlayerStats.Utils;
+import cc.seati.PlayerStats.Utils.Common;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 
@@ -23,7 +23,7 @@ public class CommandMigrate extends Command {
     public int handle(CommandContext<CommandSourceStack> ctx) {
 
         if (!Arrays.stream(DataTables.values()).map(DataTables::getTableName).toList().contains(this.table)) {
-            Utils.sendMessage(ctx, "&c数据表 " + this.table + " 不存在");
+            Common.sendMessage(ctx, "&c数据表 " + this.table + " 不存在");
             return 1;
         }
 
@@ -32,8 +32,8 @@ public class CommandMigrate extends Command {
                 .setColumnValues("player", this.to)
                 .build()
                 .executeAsync(
-                        r -> Utils.sendMessage(ctx, "&f[&a成功&f] &e迁移&f " + this.table + "&7: &a" + this.from + "&7 -> &a" + this.to),
-                        (e, a) -> Utils.sendMessage(ctx, "&f[&c失败&f] &e迁移&f " + this.table + "&7: &a" + this.from + "&7 -> &a" + this.to + "\n" + "&7" + e.getMessage())
+                        r -> Common.sendMessage(ctx, "&f[&a成功&f] &e迁移&f " + this.table + "&7: &a" + this.from + "&7 -> &a" + this.to),
+                        (e, a) -> Common.sendMessage(ctx, "&f[&c失败&f] &e迁移&f " + this.table + "&7: &a" + this.from + "&7 -> &a" + this.to + "\n" + "&7" + e.getMessage())
                 );
 
         return 1;

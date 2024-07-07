@@ -1,10 +1,12 @@
 package cc.seati.PlayerStats;
 
 import cc.seati.PlayerStats.Commands.CommandManager;
+import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
 import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.LoginRecordActionType;
+import cc.seati.PlayerStats.Utils.Common;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,21 +25,21 @@ public class Events {
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
-        ServerPlayer player = Utils.getServerPlayer(e.getEntity());
+        ServerPlayer player = Common.getServerPlayer(e.getEntity());
         PlaytimeTracker tracer = new PlaytimeTracker(player, Database.manager);
         tracer.run();
         playtimeTracerMap.put(player, tracer);
         Main.LOGGER.info("Starting playtime tracer for player " + player.getName().getString());
-        new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString(), Config.getPeriodTag()).saveAsync(Database.manager);
+        new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString(), ConfigUtil.getPeriodTag()).saveAsync(Database.manager);
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
-        ServerPlayer player = Utils.getServerPlayer(e.getEntity());
+        ServerPlayer player = Common.getServerPlayer(e.getEntity());
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
         Main.LOGGER.info("Shutting down playtime tracer for player " + player.getName().getString());
-        new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString(), Config.getPeriodTag()).saveAsync(Database.manager);
+        new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString(), ConfigUtil.getPeriodTag()).saveAsync(Database.manager);
     }
 
     @SubscribeEvent

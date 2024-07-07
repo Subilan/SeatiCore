@@ -11,10 +11,10 @@ import org.apache.logging.log4j.Logger;
 public final class Main {
     public static final String MOD_ID = "playerstats";
     public static final Logger LOGGER = LogManager.getLogger("PlayerStats");
+    public static final LocalData config = new LocalData("playerstats");
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing PlayerStats...");
-            Config.init(false);
             Database.init();
             LOGGER.info("Initialization end.");
         });
