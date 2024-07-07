@@ -78,4 +78,15 @@ public class CommonUtil {
             default -> "&f";
         } + index + "&r";
     }
+
+    public static boolean runCommand(String command) {
+        return CommonUtil.tryRun(() -> {
+            Main.server.getCommands().getDispatcher().execute(command, Main.server.createCommandSourceStack());
+            return true;
+        }, e -> {
+            Main.LOGGER.warn("Cannot execute command: " + command);
+            e.printStackTrace();
+            return false;
+        });
+    }
 }
