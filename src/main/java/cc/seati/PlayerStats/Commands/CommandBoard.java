@@ -112,7 +112,7 @@ public class CommandBoard extends Command {
                     return 1;
                 }
 
-                MutableComponent message = Text.title(Text.literal("&e登录次数&f排行榜").setStyle(Style.EMPTY.withBold(true)));
+                MutableComponent message = Text.title(Text.literal("&e登录次数&f排行榜"));
 
                 List<String> keyList =  records.keySet().stream().toList();
 
