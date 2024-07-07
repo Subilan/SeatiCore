@@ -32,17 +32,14 @@ public final class PlaytimeTracker {
     private boolean afkMessageReady = false;
     private int afkBufferTime = 0;
     private Vector<Double> playerPositionData = new Vector<>(List.of(0d, 0d, 0d, 0d, 0d, 0d));
-    private @Nullable PlaytimeRecord record = null;
+    private final @Nullable PlaytimeRecord record;
     private final SQLManager manager;
 
     public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
         this.targetPlayerName = forPlayer.getName().getString();
         this.manager = manager;
-        CommonUtil.tryExec(() -> {
-            this.record = CommonUtil.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true));
-            return null;
-        });
+        this.record = CommonUtil.tryReturn(() -> CommonUtil.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true)), null);
     }
 
     /**
