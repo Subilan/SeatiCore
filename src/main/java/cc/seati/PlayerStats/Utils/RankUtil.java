@@ -9,6 +9,7 @@ public class RankUtil {
 
     public static boolean setRank(String playername, String rankname, boolean bool) {
         Main.ranks.t.set(playername + "." + rankname, bool);
+        Main.ranks.save();
         return CommonUtil.runCommand("ftbranks " + (bool ? "add" : "remove") + " " + playername + " " + rankname);
     }
 }
