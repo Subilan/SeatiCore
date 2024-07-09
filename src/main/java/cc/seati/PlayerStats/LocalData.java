@@ -35,4 +35,12 @@ public class LocalData {
         this.init();
         Main.LOGGER.info("Reloaded " + filename + ".yml");
     }
+
+    public void save() {
+        try {
+            t.save(dist);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
