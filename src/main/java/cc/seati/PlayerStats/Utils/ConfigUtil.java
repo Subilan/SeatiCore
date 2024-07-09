@@ -9,7 +9,8 @@ import java.util.Map;
 public class ConfigUtil {
     private static final String AFK_THRESHOLD_KICK = "playtime.afk-kick-threshold";
     private static final String AFK_THRESHOLD_NOTIFY = "playtime.afk-notify-threshold";
-    private static final String AFK_MESSAGE_PATTERN = "playtime.afk-message-pattern";
+    private static final String AFK_ENTERING_MESSAGE_PATTERN = "playtime.afk-message-pattern.entering";
+    private static final String AFK_LEAVING_MESSAGE_PATTERN = "playtime.afk-message-pattern.leaving";
     private static final String DATABASE_USERNAME = "database.username";
     private static final String DATABASE_PASSWORD = "database.password";
     private static final String DATABASE_CONNECTION_TIMEOUT = "database.connection-timeout";
@@ -26,8 +27,12 @@ public class ConfigUtil {
         return Main.config.t.getInt(AFK_THRESHOLD_NOTIFY, 300);
     }
 
-    public static String getAfkMessagePattern() {
-        return Main.config.t.getString(AFK_MESSAGE_PATTERN, "$player is now afk.");
+    public static String getAfkEnteringMessagePattern() {
+        return Main.config.t.getString(AFK_ENTERING_MESSAGE_PATTERN, "$player is now afk.");
+    }
+
+    public static String getAfkLeavingMessagePattern() {
+        return Main.config.t.getString(AFK_LEAVING_MESSAGE_PATTERN, "$player is no longer afk.");
     }
 
     public static String getDatabaseUsername() {

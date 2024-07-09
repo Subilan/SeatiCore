@@ -29,7 +29,7 @@ public final class PlaytimeTracker {
     private final ScheduledExecutorService saveExecutor = Executors.newSingleThreadScheduledExecutor();
     private final ScheduledExecutorService rankExecutor = Executors.newSingleThreadScheduledExecutor();
     private boolean isAFK = false;
-    private boolean afkMessageReady = false;
+    private boolean afkMessageFlag = true;
     private int afkBufferTime = 0;
     private Vector<Double> playerPositionData = new Vector<>(List.of(0d, 0d, 0d, 0d, 0d, 0d));
     private final @Nullable PlaytimeRecord record;
@@ -95,7 +95,8 @@ public final class PlaytimeTracker {
             } else {
                 // If player is currently moving, reset buffer time and remove afk status.
                 this.isAFK = false;
-                this.afkMessageReady = true;
+                if (!this.afkMessageFlag) CommonUtil.sendAll(targetPlayer.getServer(), getAfkLeavingMessageComponent(targetPlayer));
+                this.afkMessageFlag = true;
                 this.afkBufferTime = 0;
             }
 
@@ -103,7 +104,7 @@ public final class PlaytimeTracker {
 
             // If buffer time exceeds the threshold of kicking, just disconnect the player with a reason.
             if (this.afkBufferTime >= ConfigUtil.getAfkKickThreshold()) {
-                this.targetPlayer.connection.disconnect(Component.literal("You have been in AFK state for too long (over " + ConfigUtil.getAfkKickThreshold() + " seconds!)"));
+                this.targetPlayer.connection.disconnect(Component.literal("You have been kicked for idling more than " + ConfigUtil.getAfkKickThreshold() + " seconds."));
                 this.shutdown();
             }
 
@@ -115,8 +116,8 @@ public final class PlaytimeTracker {
 
                 // Broadcast AFK message
                 // Note: PlayerList#broadcastChatMessage is not suitable for this case.
-                if (this.afkMessageReady) CommonUtil.sendAll(targetPlayer.getServer(), getAFKMessageComponent(targetPlayer));
-                this.afkMessageReady = false;
+                if (this.afkMessageFlag) CommonUtil.sendAll(targetPlayer.getServer(), getAfkEnteringMessageComponent(targetPlayer));
+                this.afkMessageFlag = false;
             }
         }, 0, 1, TimeUnit.SECONDS);
 
@@ -127,7 +128,7 @@ public final class PlaytimeTracker {
                 for (Map.Entry<String, Integer> entry : mapRequirements.entrySet()) {
                     if (record.getValidTime() >= entry.getValue()) if (!RankUtil.hasRank(this.targetPlayerName, entry.getKey())) {
                         if (RankUtil.setRank(this.targetPlayerName, entry.getKey(), true)) {
-                            Main.LOGGER.info("Player " + this.targetPlayerName + " exceeds playtime at " + TextUtil.formatSeconds(entry.getValue()) + ", adding rank " + entry.getKey() + ".");
+                            Main.LOGGER.info("Player " + this.targetPlayerName + " playtime exceeds " + TextUtil.formatSeconds(entry.getValue()) + ", adding rank " + entry.getKey() + ".");
                             targetPlayer.sendSystemMessage(TextUtil.literal("&e你的&a有效游玩时间&e已经达到 &b" + TextUtil.formatSeconds(entry.getValue()) + "&e，获得权限组 &b" + entry.getKey() + "&e！"));
                         }
                     }
@@ -136,8 +137,12 @@ public final class PlaytimeTracker {
         }
     }
 
-    public static MutableComponent getAFKMessageComponent(Player targetPlayer) {
-        return TextUtil.literal("&7" + ConfigUtil.getAfkMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString()));
+    public static MutableComponent getAfkEnteringMessageComponent(Player targetPlayer) {
+        return TextUtil.literal("&7" + ConfigUtil.getAfkEnteringMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString()));
+    }
+
+    public static MutableComponent getAfkLeavingMessageComponent(Player targetPlayer) {
+        return TextUtil.literal("&7" + ConfigUtil.getAfkLeavingMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString()));
     }
 
     public void shutdown() {

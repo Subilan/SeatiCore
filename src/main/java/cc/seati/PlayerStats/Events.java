@@ -1,12 +1,11 @@
 package cc.seati.PlayerStats;
 
 import cc.seati.PlayerStats.Commands.CommandManager;
-import cc.seati.PlayerStats.Utils.ConfigUtil;
-import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
-import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.LoginRecordActionType;
+import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
 import cc.seati.PlayerStats.Utils.CommonUtil;
+import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.Utils.DBUtil;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -31,7 +30,7 @@ public class Events {
         PlaytimeTracker tracer = new PlaytimeTracker(player, DBUtil.getManager());
         tracer.run();
         playtimeTracerMap.put(player, tracer);
-        Main.LOGGER.info("Starting playtime tracer for player " + player.getName().getString());
+        Main.LOGGER.info("Starting playtime tracker for player " + player.getName().getString());
         new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString(), ConfigUtil.getPeriodTag()).saveAsync(DBUtil.getManager());
     }
 
@@ -40,7 +39,7 @@ public class Events {
         ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
-        Main.LOGGER.info("Shutting down playtime tracer for player " + player.getName().getString());
+        Main.LOGGER.info("Shutting down playtime tracker for player " + player.getName().getString());
         new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString(), ConfigUtil.getPeriodTag()).saveAsync(DBUtil.getManager());
     }
 
