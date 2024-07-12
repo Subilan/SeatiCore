@@ -1,20 +1,15 @@
-package cc.seati.PlayerStats;
+package cc.seati.PlayerStats.Events;
 
-import cc.seati.PlayerStats.Commands.CommandManager;
-import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.Enums.LoginRecordActionType;
-import cc.seati.PlayerStats.Tracker.PlayersOnlineTracker;
+import cc.seati.PlayerStats.Database.Model.LoginRecord;
+import cc.seati.PlayerStats.Main;
 import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
 import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.Utils.DBUtil;
-import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -22,11 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mod.EventBusSubscriber(Dist.DEDICATED_SERVER)
-public class Events {
+public class PlayerEvents {
     public static Map<ServerPlayer, PlaytimeTracker> playtimeTracerMap = new HashMap<>();
 
     @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
+    public static void handlePlayerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
         PlaytimeTracker tracer = new PlaytimeTracker(player, DBUtil.getManager());
         tracer.run();
@@ -42,7 +37,7 @@ public class Events {
     }
 
     @SubscribeEvent
-    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e) {
+    public static void handlePlayerLogout(PlayerEvent.PlayerLoggedOutEvent e) {
         ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
@@ -53,18 +48,5 @@ public class Events {
                 ConfigUtil.getPeriodTag(),
                 false
         ).saveAsync(DBUtil.getManager());
-    }
-
-    @SubscribeEvent
-    public static void onRegisterCommand(RegisterCommandsEvent e) {
-        CommandDispatcher<CommandSourceStack> dispatcher = e.getDispatcher();
-        CommandManager.register(dispatcher);
-    }
-
-    @SubscribeEvent
-    public static void onServerStarted(ServerStartedEvent e) {
-        Main.server = e.getServer();
-        Main.playersOnlineTracker = new PlayersOnlineTracker(ConfigUtil.getOnlinePlayersSnapshotInterval(), Main.server);
-        Main.playersOnlineTracker.run();
     }
 }
