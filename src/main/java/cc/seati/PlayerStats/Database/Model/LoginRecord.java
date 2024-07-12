@@ -3,6 +3,7 @@ package cc.seati.PlayerStats.Database.Model;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.builder.TableQueryBuilder;
 import cc.seati.PlayerStats.Database.DataTables;
+import cc.seati.PlayerStats.Database.Model.Enums.LoginRecordActionType;
 import cc.seati.PlayerStats.Main;
 import cc.seati.PlayerStats.Utils.CommonUtil;
 
@@ -12,8 +13,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 public class LoginRecord extends DatabaseRecord {
     public static final String TABLE_NAME = DataTables.LOGIN_RECORDS.getTableName();

@@ -2,7 +2,7 @@ package cc.seati.PlayerStats;
 
 import cc.seati.PlayerStats.Commands.CommandManager;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
-import cc.seati.PlayerStats.Database.Model.LoginRecordActionType;
+import cc.seati.PlayerStats.Database.Model.Enums.LoginRecordActionType;
 import cc.seati.PlayerStats.Tracker.PlayersOnlineTracker;
 import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
 import cc.seati.PlayerStats.Utils.CommonUtil;
