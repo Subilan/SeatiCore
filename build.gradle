@@ -81,6 +81,7 @@ dependencies {
     shade group: 'com.mysql', name: 'mysql-connector-j', version: '8.2.0'
     shade "cc.carm.lib:easysql-hikaricp:0.4.7"
     shade "cc.carm.lib:easysql-api:0.4.7"
+    shade 'org.java-websocket:Java-WebSocket:1.5.7'
 }
 
 tasks.named('processResources', ProcessResources).configure {

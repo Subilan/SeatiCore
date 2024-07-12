@@ -19,6 +19,8 @@ public class ConfigUtil {
     private static final String ENABLE_FTB_RANKS_INTEGRATION = "enable-ftb-ranks-integration";
     private static final String RANK_REQUIREMENTS = "ranks";
     private static final String ONLINE_PLAYERS_SNAPSHOT_INTERVAL = "online-players-snapshot-interval";
+    private static final String ENABLE_WEBSOCKET_SERVER = "ws.enable";
+    private static final String WEBSOCKET_SERVER_PORT = "ws.port";
 
     public static int getAfkKickThreshold() {
         return Main.config.t.getInt(AFK_THRESHOLD_KICK, 3600);
@@ -76,6 +78,14 @@ public class ConfigUtil {
 
     public static int getOnlinePlayersSnapshotInterval() {
         return Main.config.t.getInt(ONLINE_PLAYERS_SNAPSHOT_INTERVAL, 10);
+    }
+
+    public static boolean getEnableWebsocketServer() {
+        return Main.config.t.getBoolean(ENABLE_WEBSOCKET_SERVER, false);
+    }
+
+    public static int getWebsocketServerPort() {
+        return Main.config.t.getInt(WEBSOCKET_SERVER_PORT, 25500);
     }
 }
    

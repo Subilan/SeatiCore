@@ -2,6 +2,7 @@ package cc.seati.PlayerStats;
 
 import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Tracker.PlayersOnlineTracker;
+import cc.seati.PlayerStats.WebSocket.WebSocketServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -18,6 +19,8 @@ public final class Main {
     public static LocalData ranks;
     public static MinecraftServer server;
     public static PlayersOnlineTracker playersOnlineTracker;
+    public static WebSocketServer wsServer;
+    public static Thread wsThread;
 
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
