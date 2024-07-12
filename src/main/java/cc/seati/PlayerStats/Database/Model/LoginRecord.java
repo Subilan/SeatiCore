@@ -4,6 +4,7 @@ import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.builder.TableQueryBuilder;
 import cc.seati.PlayerStats.Database.DataTables;
 import cc.seati.PlayerStats.Main;
+import cc.seati.PlayerStats.Utils.CommonUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class LoginRecord extends DatabaseRecord {
     public static final String TABLE_NAME = DataTables.LOGIN_RECORDS.getTableName();
@@ -20,11 +23,13 @@ public class LoginRecord extends DatabaseRecord {
     private Timestamp createdAt;
     private final String player;
     private final String tag;
+    private boolean first;
 
     public static LoginRecord fromResultSet(ResultSet rs) throws SQLException {
         return new LoginRecord(
                 rs.getInt("id"),
                 rs.getBoolean("action_type"),
+                rs.getBoolean("first"),
                 rs.getTimestamp("created_at"),
                 rs.getString("player"),
                 rs.getString("tag")
@@ -34,7 +39,7 @@ public class LoginRecord extends DatabaseRecord {
     public static TableQueryBuilder getQueryBuilder(SQLManager manager) {
         return manager.createQuery()
                 .inTable(TABLE_NAME)
-                .selectColumns("id", "action_type", "created_at", "player", "tag");
+                .selectColumns("id", "action_type", "created_at", "player", "tag", "first");
     }
 
     /**
@@ -42,12 +47,13 @@ public class LoginRecord extends DatabaseRecord {
      *
      * @param manager    SQLManager
      * @param playername 玩家名称
+     * @param tag        Period tag
      * @return 指定玩家登录记录的 Future，如果不存在任何登录记录，那么会返回一个空的列表
      */
-    public static CompletableFuture<List<LoginRecord>> from(SQLManager manager, String playername) {
+    public static CompletableFuture<List<LoginRecord>> from(SQLManager manager, String playername, String tag) {
         return getQueryBuilder(manager)
                 .addCondition("player", playername)
-                .selectColumns("id", "action_type", "created_at", "player", "tag")
+                .addCondition("tag", tag)
                 .build()
                 .executeFuture(q -> {
                     List<LoginRecord> records = new ArrayList<>();
@@ -67,7 +73,6 @@ public class LoginRecord extends DatabaseRecord {
      */
     public static CompletableFuture<List<LoginRecord>> getAll(SQLManager manager) {
         return getQueryBuilder(manager)
-                .selectColumns("id", "action_type", "created_at", "player", "tag")
                 .build()
                 .executeFuture(q -> {
                     List<LoginRecord> records = new ArrayList<>();
@@ -86,12 +91,13 @@ public class LoginRecord extends DatabaseRecord {
      * @param actionType 数据库项
      * @param createdAt  数据库项
      * @param player     数据库项
-     * @param tag      数据库项
+     * @param tag        数据库项
      */
-    public LoginRecord(int id, boolean actionType, Timestamp createdAt, String player, String tag) {
+    public LoginRecord(int id, boolean actionType, boolean first, Timestamp createdAt, String player, String tag) {
         this.id = id;
         this.actionType = actionType ? LoginRecordActionType.LOGIN : LoginRecordActionType.LOGOUT;
         this.createdAt = createdAt;
+        this.first = first;
         this.player = player;
         this.associate = true;
         this.tag = tag;
@@ -103,11 +109,12 @@ public class LoginRecord extends DatabaseRecord {
      * @param actionType 枚举类型表示的登录或者登出
      * @param player     玩家名称
      */
-    public LoginRecord(LoginRecordActionType actionType, String player, String tag) {
+    public LoginRecord(LoginRecordActionType actionType, String player, String tag, boolean first) {
         this.actionType = actionType;
         this.actionTypeValue = actionType.value;
         this.player = player;
         this.tag = tag;
+        this.first = first;
     }
 
     /**
@@ -117,14 +124,26 @@ public class LoginRecord extends DatabaseRecord {
      */
     public void saveAsync(SQLManager manager) {
         manager.createInsert(TABLE_NAME)
-                .setColumnNames("action_type", "player", "tag")
-                .setParams(this.actionTypeValue, this.player, this.tag)
+                .setColumnNames("action_type", "player", "tag", "first")
+                .setParams(this.actionTypeValue, this.player, this.tag, this.first)
                 .executeAsync(q -> {
                     this.associate = true;
                 }, (e, a) -> {
                     Main.LOGGER.warn("Error saving player login record.");
                     e.printStackTrace();
                 });
+    }
+
+    /**
+     * 判断玩家在 tag 下是否登录过。此项通过判断玩家在 tag 下的登录记录是否为空来达成
+     *
+     * @param manager SQLManager
+     * @param player  用户名
+     * @param tag     Period tag
+     * @return 如果获取数据过程出现问题，或者已经存在玩家任何一个登录记录，返回 false；否则返回 true
+     */
+    public static boolean isFirstLogin(SQLManager manager, String player, String tag) {
+        return CommonUtil.tryReturn(() -> CommonUtil.waitFor(LoginRecord.from(manager, player, tag)).stream().noneMatch(LoginRecord::isLogin), false);
     }
 
     public boolean isLogin() {
@@ -149,5 +168,9 @@ public class LoginRecord extends DatabaseRecord {
 
     public String getTag() {
         return this.tag;
+    }
+
+    public boolean isFirst() {
+        return this.first;
     }
 }

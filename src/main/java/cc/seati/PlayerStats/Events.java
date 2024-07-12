@@ -31,7 +31,13 @@ public class Events {
         tracer.run();
         playtimeTracerMap.put(player, tracer);
         Main.LOGGER.info("Starting playtime tracker for player " + player.getName().getString());
-        new LoginRecord(LoginRecordActionType.LOGIN, player.getName().getString(), ConfigUtil.getPeriodTag()).saveAsync(DBUtil.getManager());
+        new LoginRecord(
+                LoginRecordActionType.LOGIN,
+                player.getName().getString(),
+                ConfigUtil.getPeriodTag(),
+                // Check if is first login in this period tag
+                LoginRecord.isFirstLogin(DBUtil.getManager(), player.getName().getString(), ConfigUtil.getPeriodTag())
+        ).saveAsync(DBUtil.getManager());
     }
 
     @SubscribeEvent
@@ -40,7 +46,12 @@ public class Events {
         playtimeTracerMap.get(player).shutdown();
         playtimeTracerMap.remove(player);
         Main.LOGGER.info("Shutting down playtime tracker for player " + player.getName().getString());
-        new LoginRecord(LoginRecordActionType.LOGOUT, player.getName().getString(), ConfigUtil.getPeriodTag()).saveAsync(DBUtil.getManager());
+        new LoginRecord(
+                LoginRecordActionType.LOGOUT,
+                player.getName().getString(),
+                ConfigUtil.getPeriodTag(),
+                false
+        ).saveAsync(DBUtil.getManager());
     }
 
     @SubscribeEvent

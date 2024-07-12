@@ -46,7 +46,7 @@ public class CommandInfo extends Command {
                 );
             }
 
-            List<LoginRecord> loginRecords = CommonUtil.waitFor(LoginRecord.from(DBUtil.getManager(), targetPlayerName));
+            List<LoginRecord> loginRecords = CommonUtil.waitFor(LoginRecord.from(DBUtil.getManager(), targetPlayerName, ConfigUtil.getPeriodTag()));
             int loginSum = loginRecords.stream().filter(LoginRecord::isLogin).toList().size();
             if (loginSum > 0) {
                 message.append(
