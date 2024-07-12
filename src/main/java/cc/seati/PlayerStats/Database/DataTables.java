@@ -27,6 +27,13 @@ public enum DataTables implements SQLTable {
         table.addColumn("tag", "VARCHAR(20) NOT NULL");
         table.addColumn("player", "VARCHAR(20) NOT NULL");
         table.addColumn("first", "BOOLEAN NOT NULL DEFAULT 0");
+    }),
+    
+    SNAPSHOT_ONLINE_PLAYERS(table -> {
+        table.addAutoIncrementColumn("id", true);
+        table.addColumn("count", "INT NOT NULL");
+        table.addColumn("names", "TEXT NOT NULL");
+        table.addColumn("created_at", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
     });
 
     private final Consumer<TableCreateBuilder> builder;

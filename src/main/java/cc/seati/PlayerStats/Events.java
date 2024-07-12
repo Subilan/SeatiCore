@@ -3,6 +3,7 @@ package cc.seati.PlayerStats;
 import cc.seati.PlayerStats.Commands.CommandManager;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.LoginRecordActionType;
+import cc.seati.PlayerStats.Tracker.PlayersOnlineTracker;
 import cc.seati.PlayerStats.Tracker.PlaytimeTracker;
 import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
@@ -63,5 +64,7 @@ public class Events {
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent e) {
         Main.server = e.getServer();
+        Main.playersOnlineTracker = new PlayersOnlineTracker(ConfigUtil.getOnlinePlayersSnapshotInterval(), Main.server);
+        Main.playersOnlineTracker.run();
     }
 }
