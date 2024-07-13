@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
     private final MinecraftServer server;
-    private final List<String> onlineNames = new ArrayList<>();
+    public static final List<String> onlineNames = new ArrayList<>();
 
     public WebSocketServer(InetSocketAddress address, MinecraftServer server) {
         super(address);
