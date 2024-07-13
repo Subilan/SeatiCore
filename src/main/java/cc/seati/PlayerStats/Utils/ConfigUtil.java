@@ -21,6 +21,7 @@ public class ConfigUtil {
     private static final String ONLINE_PLAYERS_SNAPSHOT_INTERVAL = "online-players-snapshot-interval";
     private static final String ENABLE_WEBSOCKET_SERVER = "ws.enable";
     private static final String WEBSOCKET_SERVER_PORT = "ws.port";
+    private static final String WEBSOCKET_JWT_SECRET = "ws.jwt-secret";
 
     public static int getAfkKickThreshold() {
         return Main.config.t.getInt(AFK_THRESHOLD_KICK, 3600);
@@ -86,6 +87,10 @@ public class ConfigUtil {
 
     public static int getWebsocketServerPort() {
         return Main.config.t.getInt(WEBSOCKET_SERVER_PORT, 25500);
+    }
+
+    public static String getWebsocketJwtSecret() {
+        return Main.config.t.getString(WEBSOCKET_JWT_SECRET);
     }
 }
    
