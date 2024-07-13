@@ -82,6 +82,7 @@ dependencies {
     shade "cc.carm.lib:easysql-hikaricp:0.4.7"
     shade "cc.carm.lib:easysql-api:0.4.7"
     shade 'org.java-websocket:Java-WebSocket:1.5.7'
+    shade 'com.auth0:java-jwt:4.4.0'
 }
 
 tasks.named('processResources', ProcessResources).configure {
