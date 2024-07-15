@@ -50,7 +50,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
             return;
         }
 
-        this.onlineNames.add(payload.username());
+        onlineNames.add(payload.username());
         this.broadcastMessage(conn, withPrefix("&e" + payload.username() + "&f 加入了服务器聊天"));
         conn.setAttachment(payload.username());
     }

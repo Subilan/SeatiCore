@@ -6,6 +6,7 @@ import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.ConfigUtil;
 import cc.seati.PlayerStats.WebSocket.WebSocketServer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,5 +38,10 @@ public class ServerEvents {
             Main.LOGGER.error("Some external threads are unable to stop. Please try using Ctrl+C to resolve.");
             return null;
         });
+    }
+
+    @SubscribeEvent
+    public static void onServerChat(ServerChatEvent e) {
+        Main.wsServer.broadcast("<" + e.getPlayer().getName().getString() + "> " + e.getRawText());
     }
 }
