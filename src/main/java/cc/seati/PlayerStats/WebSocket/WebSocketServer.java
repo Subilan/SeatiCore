@@ -35,6 +35,12 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
         conn.send("connected");
         Map<String, String> params = WebUtil.splitQuery(handshake.getResourceDescriptor());
 
+        if (params.isEmpty()) {
+            conn.send("Rejected: Missing params.");
+            conn.close();
+            return;
+        }
+
         if (!params.containsKey("token")) {
             conn.send("Rejected: Missing required field 'token'.");
             conn.close();
