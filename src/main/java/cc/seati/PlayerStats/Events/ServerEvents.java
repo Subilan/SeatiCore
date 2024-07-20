@@ -33,6 +33,9 @@ public class ServerEvents {
         CommonUtil.tryRun(() -> {
             Main.wsServer.stop();
             Main.playersOnlineTracker.shutdown();
+            PlayerEvents.playtimeTrackerMap.forEach(((serverPlayer, playtimeTracker) -> {
+                playtimeTracker.shutdown();
+            }));
             return null;
         }, ex -> {
             Main.LOGGER.error("Some external threads are unable to stop. Please try using Ctrl+C to resolve.");
