@@ -1,5 +1,6 @@
-package cc.seati.PlayerStats.Commands;
+package cc.seati.PlayerStats.Commands.Modules.Lab;
 
+import cc.seati.PlayerStats.Commands.Abstract.Command;
 import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.LabUtil;
 import cc.seati.PlayerStats.Utils.Records.MCIDUsage;

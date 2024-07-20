@@ -1,7 +1,7 @@
-package cc.seati.PlayerStats.Commands;
+package cc.seati.PlayerStats.Commands.Modules.Stats;
 
+import cc.seati.PlayerStats.Commands.Abstract.Command;
 import cc.seati.PlayerStats.Database.DataTables;
-import cc.seati.PlayerStats.Database.Database;
 import cc.seati.PlayerStats.Utils.CommonUtil;
 import cc.seati.PlayerStats.Utils.DBUtil;
 import com.mojang.brigadier.context.CommandContext;

@@ -1,4 +1,4 @@
-package cc.seati.PlayerStats.Commands;
+package cc.seati.PlayerStats.Commands.Abstract;
 
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;

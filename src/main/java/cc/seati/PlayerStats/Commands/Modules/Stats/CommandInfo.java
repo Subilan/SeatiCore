@@ -1,5 +1,6 @@
-package cc.seati.PlayerStats.Commands;
+package cc.seati.PlayerStats.Commands.Modules.Stats;
 
+import cc.seati.PlayerStats.Commands.Abstract.Command;
 import cc.seati.PlayerStats.Database.Model.LoginRecord;
 import cc.seati.PlayerStats.Database.Model.PlaytimeRecord;
 import cc.seati.PlayerStats.Utils.TextUtil;

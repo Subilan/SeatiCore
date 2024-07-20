@@ -1,6 +1,6 @@
 package cc.seati.PlayerStats.Events;
 
-import cc.seati.PlayerStats.Commands.Manager;
+import cc.seati.PlayerStats.Commands.Commands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,6 +13,6 @@ public class CommandEvents {
     @SubscribeEvent
     public static void onRegisterCommand(RegisterCommandsEvent e) {
         CommandDispatcher<CommandSourceStack> dispatcher = e.getDispatcher();
-        Manager.register(dispatcher);
+        Commands.register(dispatcher);
     }
 }
