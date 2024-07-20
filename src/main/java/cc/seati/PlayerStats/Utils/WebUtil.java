@@ -11,10 +11,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
 import java.net.URLDecoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class WebUtil {
 
@@ -33,9 +38,13 @@ public class WebUtil {
 
 
         // The string being parsed here is of the format {"exp": ..., "iat": ..., "payload": {}}
-        JsonObject payload = JsonParser.parseString(fromUTF8(decodedJWT.getPayload())).getAsJsonObject().get("payload").getAsJsonObject();
+        JsonObject payload = parseJson(fromUTF8(decodedJWT.getPayload())).get("payload").getAsJsonObject();
         // We do not need to check for `exp` here because a TokenExpiredException will be thrown above if the token is already expired.
         return new DecodedJWTPayload(payload.get("username").getAsString(), payload.get("updatedAt").getAsString());
+    }
+
+    public static JsonObject parseJson(String str) {
+        return JsonParser.parseString(str).getAsJsonObject();
     }
 
     public static String fromUTF8(String str) {
@@ -53,5 +62,25 @@ public class WebUtil {
             }
             return query_pairs;
         }, new LinkedHashMap<>());
+    }
+
+    public static HttpClient getHttpClient() {
+        return HttpClient.newBuilder()
+                .version(HttpClient.Version.HTTP_2)
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .connectTimeout(Duration.ofSeconds(5))
+                .build();
+    }
+
+    public static CompletableFuture<String> GET(String uri) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .timeout(Duration.ofSeconds(5))
+                .setHeader("Seati-Server-Secret", ConfigUtil.getApiServerSecret())
+                .GET()
+                .build();
+
+        return getHttpClient().sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body);
     }
 }

@@ -19,7 +19,7 @@ public class LocalData {
         dist = new File(filename + ".yml");
         try {
             if (dist.createNewFile()) {
-                Main.LOGGER.info("Generated new configuration file at " + dist.getAbsolutePath());
+                Main.LOGGER.info("Generated new configuration file at {}", dist.getAbsolutePath());
             } else {
                 Main.LOGGER.info("Configuration file already exists. Skipping creation.");
             }
@@ -28,12 +28,12 @@ public class LocalData {
             e.printStackTrace();
         }
         t = YamlConfiguration.loadConfiguration(dist);
-        Main.LOGGER.info("Initialized " + filename + ".yml");
+        Main.LOGGER.info("Initialized {}.yml", filename);
     }
 
     public void reload() {
         this.init();
-        Main.LOGGER.info("Reloaded " + filename + ".yml");
+        Main.LOGGER.info("Reloaded {}.yml", filename);
     }
 
     public void save() {

@@ -22,6 +22,8 @@ public class ConfigUtil {
     private static final String ENABLE_WEBSOCKET_SERVER = "ws.enable";
     private static final String WEBSOCKET_SERVER_PORT = "ws.port";
     private static final String WEBSOCKET_JWT_SECRET = "ws.jwt-secret";
+    private static final String API_SERVER_SECRET = "api.server-secret";
+    private static final String API_HOST = "api.host";
 
     public static int getAfkKickThreshold() {
         return Main.config.t.getInt(AFK_THRESHOLD_KICK, 3600);
@@ -91,6 +93,14 @@ public class ConfigUtil {
 
     public static String getWebsocketJwtSecret() {
         return Main.config.t.getString(WEBSOCKET_JWT_SECRET);
+    }
+
+    public static String getApiServerSecret() {
+        return Main.config.t.getString(API_SERVER_SECRET, "");
+    }
+
+    public static String getApiHost() {
+        return Main.config.t.getString(API_HOST, "http://127.0.0.1");
     }
 }
    

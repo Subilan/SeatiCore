@@ -22,7 +22,7 @@ public class LoginRecord extends DatabaseRecord {
     private Timestamp createdAt;
     private final String player;
     private final String tag;
-    private boolean first;
+    private final boolean first;
 
     public static LoginRecord fromResultSet(ResultSet rs) throws SQLException {
         return new LoginRecord(

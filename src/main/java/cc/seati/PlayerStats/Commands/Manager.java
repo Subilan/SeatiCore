@@ -11,16 +11,16 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-public class CommandManager {
+public class Manager {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> command =
                 Commands.literal("playerstats")
                         .requires(source -> source.hasPermission(2))
                         .then(
                                 Commands.argument("input", StringArgumentType.greedyString())
-                                        .executes(CommandManager::withActionArgumentHandler)
+                                        .executes(Manager::withActionArgumentHandler)
                         )
-                        .executes(CommandManager::doSendVersionInformation);
+                        .executes(Manager::doSendVersionInformation);
         dispatcher.register(command);
     }
 
@@ -53,6 +53,7 @@ public class CommandManager {
                 }
                 yield new CommandMigrate(inputs[1], inputs[2], inputs[3]).handle(ctx);
             }
+            case "verify" -> new CommandVerify().handle(ctx);
             default -> {
                 CommonUtil.sendMessage(ctx, "No handler set for parameter " + action + ".");
                 yield 1;
