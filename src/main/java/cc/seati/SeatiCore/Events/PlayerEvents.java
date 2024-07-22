@@ -43,7 +43,7 @@ public class PlayerEvents {
         } else {
             Main.LOGGER.info("Check completed: used={}, verified={}", usage.used(), usage.verified());
             if (usage.used() && !usage.verified()) {
-                player.sendSystemMessage(TextUtil.literal("[&b提示&f] 你有未验证的&a绑定请求&f，请输入 &e/seati verify&f 完成绑定。目标 Lab 用户名：&e" + usage.with()));
+                player.sendSystemMessage(TextUtil.literal("[&b提示&f] 你有未验证的&a绑定请求&f，请输入 &e/seati lab verify&f 完成绑定。目标 Lab 用户名：&e" + usage.with()));
             }
         }
     }
