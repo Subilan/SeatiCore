@@ -43,6 +43,10 @@ public class WebUtil {
         return new DecodedJWTPayload(payload.get("username").getAsString(), payload.get("updatedAt").getAsString());
     }
 
+    public static boolean isJWTValid(String token) {
+        return decodeJWT(token) != null;
+    }
+
     public static JsonObject parseJson(String str) {
         return JsonParser.parseString(str).getAsJsonObject();
     }
@@ -54,7 +58,10 @@ public class WebUtil {
     public static Map<String, String> splitQuery(String URL) {
         return CommonUtil.tryReturn(() -> {
             Map<String, String> query_pairs = new LinkedHashMap<>();
-            String query = new URI(URL).getQuery();
+            @Nullable String query = new URI(URL).getQuery();
+            if (query == null) {
+                return new LinkedHashMap<>();
+            }
             String[] pairs = query.split("&");
             for (String pair : pairs) {
                 int idx = pair.indexOf("=");
