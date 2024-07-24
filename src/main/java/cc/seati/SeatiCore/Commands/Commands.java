@@ -1,5 +1,6 @@
 package cc.seati.SeatiCore.Commands;
 
+import cc.seati.SeatiCore.Commands.Modules.CommandReload;
 import cc.seati.SeatiCore.Commands.Modules.Stats.*;
 import cc.seati.SeatiCore.Commands.Modules.Lab.ModuleLab;
 import cc.seati.SeatiCore.Utils.CommonUtil;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class Commands {
-    public static final List<String> MODULES = List.of("stats", "lab");
+    public static final List<String> MODULES = List.of("stats", "lab", "reload");
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> command =
@@ -65,6 +66,8 @@ public class Commands {
             case "stats" -> new ModuleStats().run(ctx, module, argArray);
 
             case "lab" -> new ModuleLab().run(ctx, module, argArray);
+
+            case "reload" -> new CommandReload().handle(ctx);
 
             default -> {
                 CommonUtil.sendMessage(ctx, "&cNo default handler set for module " + module + ".");

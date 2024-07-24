@@ -8,13 +8,11 @@ import net.minecraft.commands.CommandSourceStack;
 import java.util.List;
 
 public class ModuleStats extends Module {
-    public static final List<String> ACTIONS = List.of("reload", "info", "board", "migrate");
+    public static final List<String> ACTIONS = List.of("info", "board", "migrate");
 
     @Override
     public int handle(CommandContext<CommandSourceStack> ctx, String module, String action, String[] argArray) {
         return switch (action) {
-            case "reload" -> new CommandReload().handle(ctx);
-
             case "info" -> new CommandInfo(argArray.length == 1 ? "" : argArray[1]).handle(ctx);
 
             case "board" -> CommonUtil.tryRun(
