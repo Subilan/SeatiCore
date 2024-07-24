@@ -26,7 +26,9 @@ public final class Main {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing SeatiCore...");
             config = new LocalData("seati");
+            LOGGER.info("Initialized {}.yml", config.getFilename());
             ranks = new LocalData("seati-ranks");
+            LOGGER.info("Initialized {}.yml", ranks.getFilename());
             database = new Database();
         });
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {

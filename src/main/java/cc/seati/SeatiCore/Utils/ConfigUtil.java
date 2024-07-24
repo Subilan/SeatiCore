@@ -26,51 +26,52 @@ public class ConfigUtil {
     private static final String API_HOST = "api.host";
 
     public static int getAfkKickThreshold() {
-        return Main.config.t.getInt(AFK_THRESHOLD_KICK, 3600);
+        return Main.config.target().getInt(AFK_THRESHOLD_KICK, 3600);
     }
 
     public static int getAfkNotifyThreshold() {
-        return Main.config.t.getInt(AFK_THRESHOLD_NOTIFY, 300);
+        return Main.config.target().getInt(AFK_THRESHOLD_NOTIFY, 300);
     }
 
     public static String getAfkEnteringMessagePattern() {
-        return Main.config.t.getString(AFK_ENTERING_MESSAGE_PATTERN, "$player is now afk.");
+        return Main.config.target().getString(AFK_ENTERING_MESSAGE_PATTERN, "$player is now afk.");
     }
 
     public static String getAfkLeavingMessagePattern() {
-        return Main.config.t.getString(AFK_LEAVING_MESSAGE_PATTERN, "$player is no longer afk.");
+        return Main.config.target().getString(AFK_LEAVING_MESSAGE_PATTERN, "$player is no longer afk.");
     }
 
     public static String getDatabaseUsername() {
-        return Main.config.t.getString(DATABASE_USERNAME);
+        return Main.config.target().getString(DATABASE_USERNAME);
     }
 
     public static String getDatabasePassword() {
-        return Main.config.t.getString(DATABASE_PASSWORD);
+        return Main.config.target().getString(DATABASE_PASSWORD);
     }
 
     public static int getDatabaseConnectionTimeout() {
-        return Main.config.t.getInt(DATABASE_CONNECTION_TIMEOUT, 5);
+        return Main.config.target().getInt(DATABASE_CONNECTION_TIMEOUT, 5);
     }
 
     public static String getPeriodTag() {
-        return Main.config.t.getString(PERIOD_TAG, "default");
+        return Main.config.target().getString(PERIOD_TAG, "default");
     }
 
     public static int getPaginationPageSize() {
-        return Main.config.t.getInt(PAGINATION_PAGE_SIZE, 10);
+        return Main.config.target().getInt(PAGINATION_PAGE_SIZE, 10);
     }
 
     public static void reload() {
         Main.config.reload();
+        Main.LOGGER.info("Reloaded {}.yml", Main.config.getFilename());
     }
 
     public static boolean getEnableFTBRanksIntegration() {
-        return Main.config.t.getBoolean(ENABLE_FTB_RANKS_INTEGRATION, false);
+        return Main.config.target().getBoolean(ENABLE_FTB_RANKS_INTEGRATION, false);
     }
 
     public static Map<String, Integer> getRankRequirements() {
-        ConfigurationSection section = Main.config.t.getConfigurationSection(RANK_REQUIREMENTS);
+        ConfigurationSection section = Main.config.target().getConfigurationSection(RANK_REQUIREMENTS);
         Map<String, Integer> map = new LinkedHashMap<>();
         if (section == null) return map;
         for (String key : section.getKeys(false)) {
@@ -80,27 +81,27 @@ public class ConfigUtil {
     }
 
     public static int getOnlinePlayersSnapshotInterval() {
-        return Main.config.t.getInt(ONLINE_PLAYERS_SNAPSHOT_INTERVAL, 10);
+        return Main.config.target().getInt(ONLINE_PLAYERS_SNAPSHOT_INTERVAL, 10);
     }
 
     public static boolean getEnableWebsocketServer() {
-        return Main.config.t.getBoolean(ENABLE_WEBSOCKET_SERVER, false);
+        return Main.config.target().getBoolean(ENABLE_WEBSOCKET_SERVER, false);
     }
 
     public static int getWebsocketServerPort() {
-        return Main.config.t.getInt(WEBSOCKET_SERVER_PORT, 25500);
+        return Main.config.target().getInt(WEBSOCKET_SERVER_PORT, 25500);
     }
 
     public static String getWebsocketJwtSecret() {
-        return Main.config.t.getString(WEBSOCKET_JWT_SECRET);
+        return Main.config.target().getString(WEBSOCKET_JWT_SECRET);
     }
 
     public static String getApiServerSecret() {
-        return Main.config.t.getString(API_SERVER_SECRET, "");
+        return Main.config.target().getString(API_SERVER_SECRET, "");
     }
 
     public static String getApiHost() {
-        return Main.config.t.getString(API_HOST, "http://127.0.0.1");
+        return Main.config.target().getString(API_HOST, "http://127.0.0.1");
     }
 }
    

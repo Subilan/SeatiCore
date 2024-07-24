@@ -6,20 +6,20 @@ import java.io.File;
 import java.io.IOException;
 
 public class LocalData {
-    public File dist;
-    public YamlConfiguration t;
-    public String filename;
+    private File file;
+    private YamlConfiguration t;
+    private String filename;
 
     public LocalData(String filename) {
-        this.filename = filename;
+        this.setFilename(filename);
         this.init();
     }
 
     public void init() {
-        dist = new File(filename + ".yml");
+        file = new File(filename + ".yml");
         try {
-            if (dist.createNewFile()) {
-                Main.LOGGER.info("Generated new configuration file at {}", dist.getAbsolutePath());
+            if (file.createNewFile()) {
+                Main.LOGGER.info("Generated new configuration file at {}", file.getAbsolutePath());
             } else {
                 Main.LOGGER.info("Configuration file already exists. Skipping creation.");
             }
@@ -27,20 +27,34 @@ public class LocalData {
             Main.LOGGER.warn("Could not create new configuration file.");
             e.printStackTrace();
         }
-        t = YamlConfiguration.loadConfiguration(dist);
-        Main.LOGGER.info("Initialized {}.yml", filename);
+        t = YamlConfiguration.loadConfiguration(file);
     }
 
     public void reload() {
         this.init();
-        Main.LOGGER.info("Reloaded {}.yml", filename);
     }
 
     public void save() {
         try {
-            t.save(dist);
+            t.save(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public YamlConfiguration target() {
+        return t;
+    }
+
+    public File getFile() {
+        return file;
     }
 }
