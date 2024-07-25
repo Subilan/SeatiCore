@@ -17,6 +17,7 @@ public enum DataTables implements SQLTable {
         table.addColumn("created_at", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
         table.addColumn("tag", "VARCHAR(20) NOT NULL");
         table.addColumn("player", "VARCHAR(20) NOT NULL");
+        table.addColumn("uuid", "VARCHAR(50) NOT NULL");
         table.addColumn("first", "BOOLEAN NOT NULL DEFAULT 0");
     }),
 
@@ -27,6 +28,7 @@ public enum DataTables implements SQLTable {
         table.addColumn("updated_at", "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
         table.addColumn("tag", "VARCHAR(20) NOT NULL");
         table.addColumn("player", "VARCHAR(20) NOT NULL");
+        table.addColumn("uuid", "VARCHAR(50) NOT NULL");
     }),
     
     SNAPSHOT_ONLINE_PLAYERS(table -> {

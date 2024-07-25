@@ -31,6 +31,7 @@ public class PlayerEvents {
         new LoginRecord(
                 LoginRecordActionType.LOGIN,
                 player.getName().getString(),
+                player.getStringUUID(),
                 ConfigUtil.getPeriodTag(),
                 // Check if is first login in this period tag
                 LoginRecord.isFirstLogin(DBUtil.getManager(), player.getName().getString(), ConfigUtil.getPeriodTag())
@@ -57,6 +58,7 @@ public class PlayerEvents {
         new LoginRecord(
                 LoginRecordActionType.LOGOUT,
                 player.getName().getString(),
+                player.getStringUUID(),
                 ConfigUtil.getPeriodTag(),
                 false
         ).saveAsync(DBUtil.getManager());

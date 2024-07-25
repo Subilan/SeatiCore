@@ -36,7 +36,7 @@ public class CommandInfo extends Command {
         MutableComponent message = TextUtil.title(TextUtil.literal("&e" + targetPlayerName + "&f " + ((ConfigUtil.getPeriodTag().equals("default")) ? "" : ("在 &b" + ConfigUtil.getPeriodTag() + "&f ")) + "的统计数据&r"));
 
         return CommonUtil.tryReturn(() -> {
-            PlaytimeRecord playtimeRecord = CommonUtil.waitFor(PlaytimeRecord.from(DBUtil.getManager(), ConfigUtil.getPeriodTag(), targetPlayerName));
+            PlaytimeRecord playtimeRecord = CommonUtil.waitFor(PlaytimeRecord.from(DBUtil.getManager(), ConfigUtil.getPeriodTag(), targetPlayerName, ""));
             if (playtimeRecord != null) {
                 message.append(
                         TextUtil.literal(

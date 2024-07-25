@@ -21,29 +21,32 @@ public class PlaytimeRecord extends DatabaseRecord {
     private Timestamp updatedAt;
     private final String tag;
     private final String player;
+    private final String uuid;
 
-    public PlaytimeRecord(int id, int total, int afk, Timestamp updatedAt, String tag, String player) {
+    public PlaytimeRecord(int id, int total, int afk, Timestamp updatedAt, String tag, String player, String uuid) {
         this.id = id;
         this.total = total;
         this.afk = afk;
         this.updatedAt = updatedAt;
         this.tag = tag;
         this.player = player;
+        this.uuid = uuid;
         this.associate = true;
     }
 
-    public PlaytimeRecord(int total, int afk, String tag, String player) {
+    public PlaytimeRecord(int total, int afk, String tag, String player, String uuid) {
         this.total = total;
         this.afk = afk;
         this.tag = tag;
         this.player = player;
+        this.uuid = uuid;
     }
 
     public static Future<List<PlaytimeRecord>> from(SQLManager manager, String tag) {
         return manager.createQuery()
                 .inTable(TABLE_NAME)
                 .addCondition("tag", tag)
-                .selectColumns("id", "total", "afk", "tag", "player", "updated_at")
+                .selectColumns("id", "total", "afk", "tag", "player", "uuid", "updated_at")
                 .build()
                 .executeFuture(q -> {
                     List<PlaytimeRecord> records = new ArrayList<>();
@@ -55,15 +58,16 @@ public class PlaytimeRecord extends DatabaseRecord {
                                 rs.getInt("afk"),
                                 rs.getTimestamp("updated_at"),
                                 rs.getString("tag"),
-                                rs.getString("player")
+                                rs.getString("player"),
+                                rs.getString("uuid")
                         ));
                     }
                     return records;
                 });
     }
 
-    public static Future<@Nullable PlaytimeRecord> from(SQLManager manager, String tag, String player) {
-        return from(manager, tag, player, false);
+    public static Future<@Nullable PlaytimeRecord> from(SQLManager manager, String tag, String player, String uuid) {
+        return from(manager, tag, player, uuid, false);
     }
 
     /**
@@ -75,13 +79,13 @@ public class PlaytimeRecord extends DatabaseRecord {
      * @param autoCreate 是否自动创建，如果设置为 true，当记录不存在时会自动创建；如果设置为 false，当记录不存在时返回 null。为了更好的 IDE 提示，设置为 false 时建议使用 <b>PlaytimeRecord.from(SQLManager, String, String)</b> 方法。
      * @return 对应的 PlaytimeRecord 实例
      */
-    public static Future<PlaytimeRecord> from(SQLManager manager, String tag, String player, boolean autoCreate) {
+    public static Future<PlaytimeRecord> from(SQLManager manager, String tag, String player, String uuid, boolean autoCreate) {
         // Firstly check if the target record is present.
         return manager.createQuery()
                 .inTable(TABLE_NAME)
                 .addCondition("player", player)
                 .addCondition("tag", tag)
-                .selectColumns("id", "total", "afk", "tag", "player", "updated_at")
+                .selectColumns("id", "total", "afk", "tag", "player", "uuid", "updated_at")
                 .build()
                 .executeFuture(q -> {
                     ResultSet rs = q.getResultSet();
@@ -93,16 +97,17 @@ public class PlaytimeRecord extends DatabaseRecord {
                                 rs.getInt("afk"),
                                 rs.getTimestamp("updated_at"),
                                 rs.getString("tag"),
-                                rs.getString("player")
+                                rs.getString("player"),
+                                rs.getString("uuid")
                         );
                     } else {
                         if (autoCreate) {
                             // or, create an empty record and return.
                             manager.createInsert(TABLE_NAME)
-                                    .setColumnNames("total", "afk", "tag", "player")
-                                    .setParams(0, 0, tag, player)
+                                    .setColumnNames("total", "afk", "tag", "player", "uuid")
+                                    .setParams(0, 0, tag, player, uuid)
                                     .executeAsync();
-                            PlaytimeRecord record = new PlaytimeRecord(0, 0, tag, player);
+                            PlaytimeRecord record = new PlaytimeRecord(0, 0, tag, player, uuid);
                             record.associate = true;
                             return record;
                         } else {
@@ -178,5 +183,9 @@ public class PlaytimeRecord extends DatabaseRecord {
     public void increaseTotal() {
         this.total += 1;
         this.updatedAt = CommonUtil.getCurrentTimestamp();
+    }
+
+    public String getUUID() {
+        return uuid;
     }
 }

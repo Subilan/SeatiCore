@@ -39,7 +39,7 @@ public final class PlaytimeTracker {
         this.targetPlayer = forPlayer;
         this.targetPlayerName = forPlayer.getName().getString();
         this.manager = manager;
-        this.record = CommonUtil.tryReturn(() -> CommonUtil.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), true)), null);
+        this.record = CommonUtil.tryReturn(() -> CommonUtil.waitFor(PlaytimeRecord.from(manager, ConfigUtil.getPeriodTag(), forPlayer.getName().getString(), forPlayer.getStringUUID(), true)), null);
     }
 
     /**
@@ -58,7 +58,7 @@ public final class PlaytimeTracker {
             return;
         }
 
-        // Save record at one second period to ensure preciseness.
+        // Save record at one-second period to ensure preciseness.
         // Assuming the updating action will cost far less than one second.
         // Assuming that HikariCP will handle this relatively high concurrency scenario well.
 
@@ -128,7 +128,7 @@ public final class PlaytimeTracker {
                 for (Map.Entry<String, Integer> entry : mapRequirements.entrySet()) {
                     if (record.getValidTime() >= entry.getValue()) if (!RankUtil.hasRank(this.targetPlayerName, entry.getKey())) {
                         if (RankUtil.setRank(this.targetPlayerName, entry.getKey(), true)) {
-                            Main.LOGGER.info("Player " + this.targetPlayerName + " playtime exceeds " + TextUtil.formatSeconds(entry.getValue()) + ", adding rank " + entry.getKey() + ".");
+                            Main.LOGGER.info("Player {} playtime exceeds {}, adding rank {}.", this.targetPlayerName, TextUtil.formatSeconds(entry.getValue()), entry.getKey());
                             targetPlayer.sendSystemMessage(TextUtil.literal("&e你的&a有效游玩时间&e已经达到 &b" + TextUtil.formatSeconds(entry.getValue()) + "&e，获得权限组 &b" + entry.getKey() + "&e！"));
                         }
                     }

@@ -23,6 +23,7 @@ public class LoginRecord extends DatabaseRecord {
     private final String player;
     private final String tag;
     private final boolean first;
+    private final String uuid;
 
     public static LoginRecord fromResultSet(ResultSet rs) throws SQLException {
         return new LoginRecord(
@@ -31,14 +32,15 @@ public class LoginRecord extends DatabaseRecord {
                 rs.getBoolean("first"),
                 rs.getTimestamp("created_at"),
                 rs.getString("player"),
-                rs.getString("tag")
+                rs.getString("tag"),
+                rs.getString("uuid")
         );
     }
 
     public static TableQueryBuilder getQueryBuilder(SQLManager manager) {
         return manager.createQuery()
                 .inTable(TABLE_NAME)
-                .selectColumns("id", "action_type", "created_at", "player", "tag", "first");
+                .selectColumns("id", "action_type", "created_at", "player", "tag", "first", "uuid");
     }
 
     /**
@@ -92,7 +94,7 @@ public class LoginRecord extends DatabaseRecord {
      * @param player     数据库项
      * @param tag        数据库项
      */
-    public LoginRecord(int id, boolean actionType, boolean first, Timestamp createdAt, String player, String tag) {
+    public LoginRecord(int id, boolean actionType, boolean first, Timestamp createdAt, String player, String tag, String uuid) {
         this.id = id;
         this.actionType = actionType ? LoginRecordActionType.LOGIN : LoginRecordActionType.LOGOUT;
         this.createdAt = createdAt;
@@ -100,6 +102,7 @@ public class LoginRecord extends DatabaseRecord {
         this.player = player;
         this.associate = true;
         this.tag = tag;
+        this.uuid = uuid;
     }
 
     /**
@@ -108,10 +111,11 @@ public class LoginRecord extends DatabaseRecord {
      * @param actionType 枚举类型表示的登录或者登出
      * @param player     玩家名称
      */
-    public LoginRecord(LoginRecordActionType actionType, String player, String tag, boolean first) {
+    public LoginRecord(LoginRecordActionType actionType, String player, String uuid, String tag, boolean first) {
         this.actionType = actionType;
         this.actionTypeValue = actionType.value;
         this.player = player;
+        this.uuid = uuid;
         this.tag = tag;
         this.first = first;
     }
@@ -123,8 +127,8 @@ public class LoginRecord extends DatabaseRecord {
      */
     public void saveAsync(SQLManager manager) {
         manager.createInsert(TABLE_NAME)
-                .setColumnNames("action_type", "player", "tag", "first")
-                .setParams(this.actionTypeValue, this.player, this.tag, this.first)
+                .setColumnNames("action_type", "player", "uuid", "tag", "first")
+                .setParams(this.actionTypeValue, this.player, this.uuid, this.tag, this.first)
                 .executeAsync(q -> {
                     this.associate = true;
                 }, (e, a) -> {
@@ -171,5 +175,9 @@ public class LoginRecord extends DatabaseRecord {
 
     public boolean isFirst() {
         return this.first;
+    }
+
+    public String getUUID() {
+        return this.uuid;
     }
 }
