@@ -3,7 +3,7 @@ package cc.seati.SeatiCore.Events;
 import cc.seati.SeatiCore.Database.Model.Enums.LoginRecordActionType;
 import cc.seati.SeatiCore.Database.Model.LoginRecord;
 import cc.seati.SeatiCore.Main;
-import cc.seati.SeatiCore.Tracker.PlaytimeTracker;
+import cc.seati.SeatiCore.Tasks.TrackPlaytimeTask;
 import cc.seati.SeatiCore.Utils.*;
 import cc.seati.SeatiCore.Utils.Records.MCIDUsage;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,12 +18,12 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(Dist.DEDICATED_SERVER)
 public class PlayerEvents {
-    public static Map<ServerPlayer, PlaytimeTracker> playtimeTrackerMap = new HashMap<>();
+    public static Map<ServerPlayer, TrackPlaytimeTask> playtimeTrackerMap = new HashMap<>();
 
     @SubscribeEvent
     public static void handlePlayerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
-        PlaytimeTracker tracker = new PlaytimeTracker(player, DBUtil.getManager());
+        TrackPlaytimeTask tracker = new TrackPlaytimeTask(player, DBUtil.getManager());
         tracker.run();
         playtimeTrackerMap.put(player, tracker);
         Main.LOGGER.info("Starting playtime tracker for player {}", player.getName().getString());

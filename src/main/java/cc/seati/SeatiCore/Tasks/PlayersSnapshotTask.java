@@ -1,4 +1,4 @@
-package cc.seati.SeatiCore.Tracker;
+package cc.seati.SeatiCore.Tasks;
 
 import cc.seati.SeatiCore.Database.Model.OnlinePlayerSnapshot;
 import cc.seati.SeatiCore.Utils.DBUtil;
@@ -9,12 +9,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlayersOnlineTracker {
+public class PlayersSnapshotTask {
     private final ScheduledExecutorService snapshotExecutor = Executors.newSingleThreadScheduledExecutor();
     private final int interval;
     private final MinecraftServer server;
 
-    public PlayersOnlineTracker(int interval, MinecraftServer server) {
+    public PlayersSnapshotTask(int interval, MinecraftServer server) {
         this.interval = interval;
         this.server = server;
     }

@@ -1,7 +1,7 @@
 package cc.seati.SeatiCore.Events;
 
 import cc.seati.SeatiCore.Main;
-import cc.seati.SeatiCore.Tracker.PlayersOnlineTracker;
+import cc.seati.SeatiCore.Tasks.PlayersSnapshotTask;
 import cc.seati.SeatiCore.Utils.CommonUtil;
 import cc.seati.SeatiCore.Utils.ConfigUtil;
 import cc.seati.SeatiCore.WebSocket.WebSocketServer;
@@ -19,8 +19,8 @@ public class ServerEvents {
     @SubscribeEvent
     public static void onServerStarted(ServerStartedEvent e) {
         Main.server = e.getServer();
-        Main.playersOnlineTracker = new PlayersOnlineTracker(ConfigUtil.getOnlinePlayersSnapshotInterval(), Main.server);
-        Main.playersOnlineTracker.run();
+        Main.playersSnapshotTask = new PlayersSnapshotTask(ConfigUtil.getOnlinePlayersSnapshotInterval(), Main.server);
+        Main.playersSnapshotTask.run();
         if (ConfigUtil.getEnableWebsocketServer()) {
             Main.wsServer = new WebSocketServer(new InetSocketAddress(ConfigUtil.getWebsocketServerPort()), Main.server);
             Main.wsThread = new Thread(() -> Main.wsServer.run());
@@ -32,7 +32,7 @@ public class ServerEvents {
     public static void onServerStopping(ServerStoppingEvent e) {
         CommonUtil.tryRun(() -> {
             Main.wsServer.stop();
-            Main.playersOnlineTracker.shutdown();
+            Main.playersSnapshotTask.shutdown();
             PlayerEvents.playtimeTrackerMap.forEach(((serverPlayer, playtimeTracker) -> {
                 playtimeTracker.shutdown();
             }));

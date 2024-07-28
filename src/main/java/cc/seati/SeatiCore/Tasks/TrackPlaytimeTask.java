@@ -1,4 +1,4 @@
-package cc.seati.SeatiCore.Tracker;
+package cc.seati.SeatiCore.Tasks;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.seati.SeatiCore.Database.Model.PlaytimeRecord;
@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public final class PlaytimeTracker {
+public final class TrackPlaytimeTask {
     private final ServerPlayer targetPlayer;
     private final String targetPlayerName;
     private final ScheduledExecutorService timerExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -35,7 +35,7 @@ public final class PlaytimeTracker {
     private final @Nullable PlaytimeRecord record;
     private final SQLManager manager;
 
-    public PlaytimeTracker(ServerPlayer forPlayer, SQLManager manager) {
+    public TrackPlaytimeTask(ServerPlayer forPlayer, SQLManager manager) {
         this.targetPlayer = forPlayer;
         this.targetPlayerName = forPlayer.getName().getString();
         this.manager = manager;
