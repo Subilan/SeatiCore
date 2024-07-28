@@ -3,10 +3,12 @@ package cc.seati.SeatiCore.Utils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class TextUtil {
+    public static final String DATE_PATTERN_NORMAL = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_PATTERN_UNDERSCORE = "yyyy-MM-dd_HH:mm:ss";
 
     /**
      * 利用替换后的字符串创建 MutableComponent
@@ -46,11 +48,11 @@ public class TextUtil {
     }
 
     /**
-     * 将指定时间戳转换为 yyyy-MM-dd HH:mm:ss 格式的字符串（本地时间）
-     * @param timestamp 要转换的时间戳
+     * 将指定 LocalDateTime 格式化为 yyyy-MM-dd HH:mm:ss 格式的字符串（本地时间）
+     * @param ldt 要格式化的 LocalDateTime
      * @return 转换后的字符串
      */
-    public static String formatTimestamp(Timestamp timestamp) {
-        return timestamp.toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    public static String formatLocalDateTime(LocalDateTime ldt, String pattern) {
+        return ldt.format(DateTimeFormatter.ofPattern(pattern));
     }
 }
