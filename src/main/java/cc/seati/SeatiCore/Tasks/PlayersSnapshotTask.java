@@ -1,6 +1,7 @@
 package cc.seati.SeatiCore.Tasks;
 
 import cc.seati.SeatiCore.Database.Model.OnlinePlayerSnapshot;
+import cc.seati.SeatiCore.Main;
 import cc.seati.SeatiCore.Utils.DBUtil;
 import net.minecraft.server.MinecraftServer;
 
@@ -20,6 +21,7 @@ public class PlayersSnapshotTask {
     }
 
     public void run() {
+        Main.LOGGER.info("Running PlayersSnapshotTask at duration of {}s", this.interval);
         snapshotExecutor.scheduleAtFixedRate(() -> {
             List<String> playerNames = server.getPlayerList().getPlayers().stream().map(p -> p.getName().getString()).toList();
             new OnlinePlayerSnapshot(playerNames.size(), String.join(",", playerNames)).saveAsync(DBUtil.getManager());
