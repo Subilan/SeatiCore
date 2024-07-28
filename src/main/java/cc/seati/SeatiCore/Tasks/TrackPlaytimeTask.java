@@ -54,7 +54,7 @@ public final class TrackPlaytimeTask {
     public void run() {
 
         if (this.record == null) {
-            Main.LOGGER.warn("Run playtime tracker for " + targetPlayer.getName().getString() + " failed.");
+            Main.LOGGER.warn("Run playtime tracker for {} failed.", targetPlayer.getName().getString());
             return;
         }
 
