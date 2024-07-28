@@ -24,6 +24,7 @@ public class ConfigUtil {
     private static final String WEBSOCKET_JWT_SECRET = "ws.jwt-secret";
     private static final String API_SERVER_SECRET = "api.server-secret";
     private static final String API_HOST = "api.host";
+    private static final String MAX_EMPTY_TIME = "max-empty-time";
 
     public static int getAfkKickThreshold() {
         return Main.config.target().getInt(AFK_THRESHOLD_KICK, 3600);
@@ -102,6 +103,10 @@ public class ConfigUtil {
 
     public static String getApiHost() {
         return Main.config.target().getString(API_HOST, "http://127.0.0.1");
+    }
+
+    public static Integer getMaxEmptyTime() {
+        return Main.config.target().getInt(MAX_EMPTY_TIME, 3600);
     }
 }
    

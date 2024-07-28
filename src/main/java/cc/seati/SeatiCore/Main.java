@@ -1,7 +1,8 @@
 package cc.seati.SeatiCore;
 
 import cc.seati.SeatiCore.Database.Database;
-import cc.seati.SeatiCore.Tracker.PlayersOnlineTracker;
+import cc.seati.SeatiCore.Tasks.EmptyServerTask;
+import cc.seati.SeatiCore.Tasks.PlayersSnapshotTask;
 import cc.seati.SeatiCore.WebSocket.WebSocketServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,17 +19,19 @@ public final class Main {
     public static Database database;
     public static LocalData ranks;
     public static MinecraftServer server;
-    public static PlayersOnlineTracker playersOnlineTracker;
+    public static PlayersSnapshotTask playersSnapshotTask;
+    public static EmptyServerTask emptyServerTask;
     public static WebSocketServer wsServer;
     public static Thread wsThread;
 
     public Main() {
         DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> {
             LOGGER.info("Initializing SeatiCore...");
+            LOGGER.info("Initializing seati.yml...");
             config = new LocalData("seati");
-            LOGGER.info("Initialized {}.yml", config.getFilename());
+            LOGGER.info("Initializing seati-ranks.yml...");
             ranks = new LocalData("seati-ranks");
-            LOGGER.info("Initialized {}.yml", ranks.getFilename());
+            LOGGER.info("Initializing database...");
             database = new Database();
         });
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {
