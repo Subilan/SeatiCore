@@ -34,6 +34,12 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
         conn.send("connected");
         Map<String, String> params = WebUtil.splitQuery(handshake.getResourceDescriptor());
 
+        if (params.containsKey("ping")) {
+            conn.send("pong");
+            conn.close();
+            return;
+        }
+
         String displayname;
 
         if (!params.containsKey("token")) {
