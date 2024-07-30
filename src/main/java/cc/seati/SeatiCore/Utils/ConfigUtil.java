@@ -11,6 +11,8 @@ public class ConfigUtil {
     private static final String AFK_THRESHOLD_NOTIFY = "playtime.afk-notify-threshold";
     private static final String AFK_ENTERING_MESSAGE_PATTERN = "playtime.afk-message-pattern.entering";
     private static final String AFK_LEAVING_MESSAGE_PATTERN = "playtime.afk-message-pattern.leaving";
+    private static final String DATABASE_HOST = "database.host";
+    private static final String DATABASE_NAME = "database.name";
     private static final String DATABASE_USERNAME = "database.username";
     private static final String DATABASE_PASSWORD = "database.password";
     private static final String DATABASE_CONNECTION_TIMEOUT = "database.connection-timeout";
@@ -48,6 +50,14 @@ public class ConfigUtil {
 
     public static String getDatabasePassword() {
         return Main.config.target().getString(DATABASE_PASSWORD);
+    }
+
+    public static String getDatabaseHost() {
+        return Main.config.target().getString(DATABASE_HOST);
+    }
+
+    public static String getDatabaseName() {
+        return Main.config.target().getString(DATABASE_NAME);
     }
 
     public static int getDatabaseConnectionTimeout() {

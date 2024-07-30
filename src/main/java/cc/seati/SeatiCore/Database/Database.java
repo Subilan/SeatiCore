@@ -13,7 +13,7 @@ public class Database {
     public boolean isValid = false;
 
     public Database() {
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/playerstats");
+        config.setJdbcUrl("jdbc:mysql://" + ConfigUtil.getDatabaseHost() + ":3306/" + ConfigUtil.getDatabaseName());
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setUsername(ConfigUtil.getDatabaseUsername());
         config.setPassword(ConfigUtil.getDatabasePassword());
