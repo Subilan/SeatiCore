@@ -90,4 +90,16 @@ public class WebUtil {
         return getHttpClient().sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body);
     }
+
+    public static CompletableFuture<Void> DELETE(String uri) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri))
+                .timeout(Duration.ofSeconds(5))
+                .setHeader("Seati-Server-Secret", ConfigUtil.getApiServerSecret())
+                .DELETE()
+                .build();
+
+        return getHttpClient().sendAsync(request, HttpResponse.BodyHandlers.discarding())
+                .thenApply(HttpResponse::body);
+    }
 }

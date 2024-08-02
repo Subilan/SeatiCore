@@ -3,6 +3,7 @@ package cc.seati.SeatiCore.Tasks;
 import cc.seati.SeatiCore.Main;
 import cc.seati.SeatiCore.Utils.CommonUtil;
 import cc.seati.SeatiCore.Utils.ConfigUtil;
+import cc.seati.SeatiCore.Utils.LabUtil;
 import cc.seati.SeatiCore.Utils.OSSUtil;
 import net.minecraft.server.MinecraftServer;
 
@@ -32,8 +33,7 @@ public class EmptyServerTask {
                 Main.LOGGER.warn("Empty time reached the limit of {}s. Archiving files.", ConfigUtil.getMaxEmptyTime());
                 CommonUtil.saveEverything(server);
                 OSSUtil.doArchive();
-                // Do not use MinecraftServer#stopServer or MinecraftServer#close (which will cause exception thus incompletely closed hanging server process) in this scheduler.
-                CommonUtil.runCommand("stop");
+                CommonUtil.waitForWhatever(LabUtil.deleteThis());
                 return;
             }
 

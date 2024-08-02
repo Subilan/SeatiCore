@@ -10,6 +10,7 @@ import java.util.concurrent.CompletableFuture;
 public class LabUtil {
     private static final String ENDPOINT_MCID_USAGE = "/user/mcid-usage";
     private static final String ENDPOINT_MCID_VERIFY = "/user/mcid-verify";
+    private static final String ENDPOINT_DELETE_INSTANCE = "/ecs/delete";
 
     private static boolean success(JsonObject resp) {
         return BackendCodes.OK.getCode() == resp.get("code").getAsInt();
@@ -37,5 +38,9 @@ public class LabUtil {
             JsonObject parsed = WebUtil.parseJson(s);
             return LabUtil.success(parsed);
         });
+    }
+
+    public static CompletableFuture<Void> deleteThis() {
+        return WebUtil.DELETE(ConfigUtil.getApiHost() + ENDPOINT_DELETE_INSTANCE);
     }
 }

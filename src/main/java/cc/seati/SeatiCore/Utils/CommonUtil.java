@@ -42,6 +42,14 @@ public class CommonUtil {
         return waitFor(future, 5);
     }
 
+    public static void waitForWhatever(Future<?> future) {
+        try {
+            waitFor(future);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static <T> T waitFor(Future<T> future, int timeout) throws ExecutionException, InterruptedException, TimeoutException {
         return future.get(timeout, TimeUnit.SECONDS);
     }
