@@ -27,6 +27,10 @@ public class ConfigUtil {
     private static final String API_SERVER_SECRET = "api.server-secret";
     private static final String API_HOST = "api.host";
     private static final String MAX_EMPTY_TIME = "max-empty-time";
+    private static final String OSS_BACKUP_SCRIPT = "oss.backup-script";
+    private static final String OSS_ARCHIVE_SCRIPT = "oss.archive-script";
+    private static final String OSS_BACKUP_INTERVAL = "oss.backup-interval";
+    private static final String OSS_UPLOAD_TIMEOUT = "oss.upload-timeout";
 
     public static int getAfkKickThreshold() {
         return Main.config.target().getInt(AFK_THRESHOLD_KICK, 3600);
@@ -117,6 +121,22 @@ public class ConfigUtil {
 
     public static Integer getMaxEmptyTime() {
         return Main.config.target().getInt(MAX_EMPTY_TIME, 3600);
+    }
+
+    public static String getOssBackupScript() {
+        return Main.config.target().getString(OSS_BACKUP_SCRIPT);
+    }
+
+    public static String getOssArchiveScript() {
+        return Main.config.target().getString(OSS_ARCHIVE_SCRIPT);
+    }
+
+    public static int getOssBackupInterval() {
+        return Main.config.target().getInt(OSS_BACKUP_INTERVAL, 3600);
+    }
+
+    public static int getOssUploadTimeout() {
+        return Main.config.target().getInt(OSS_UPLOAD_TIMEOUT, 120);
     }
 }
    
