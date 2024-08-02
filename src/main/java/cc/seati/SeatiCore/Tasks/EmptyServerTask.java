@@ -3,6 +3,7 @@ package cc.seati.SeatiCore.Tasks;
 import cc.seati.SeatiCore.Main;
 import cc.seati.SeatiCore.Utils.CommonUtil;
 import cc.seati.SeatiCore.Utils.ConfigUtil;
+import cc.seati.SeatiCore.Utils.OSSUtil;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.concurrent.Executors;
@@ -19,7 +20,7 @@ public class EmptyServerTask {
     }
 
     public void run() {
-        Main.LOGGER.info("Running EmptyServerTask at duration of 1s, maxemptytime={}s", ConfigUtil.getMaxEmptyTime());
+        Main.LOGGER.info("Running EmptyServerTask at interval of 1s, maxemptytime={}s", ConfigUtil.getMaxEmptyTime());
         emptyServerExecutor.scheduleAtFixedRate(() -> {
             if (server.getPlayerCount() == 0) {
                 emptyTime += 1;
@@ -28,14 +29,16 @@ public class EmptyServerTask {
             }
 
             if (emptyTime > ConfigUtil.getMaxEmptyTime()) {
-                Main.LOGGER.warn("Empty time reached the limit of {}s. Closing server.", ConfigUtil.getMaxEmptyTime());
+                Main.LOGGER.warn("Empty time reached the limit of {}s. Archiving files.", ConfigUtil.getMaxEmptyTime());
+                CommonUtil.saveEverything(server);
+                OSSUtil.doArchive();
                 // Do not use MinecraftServer#stopServer or MinecraftServer#close (which will cause exception thus incompletely closed hanging server process) in this scheduler.
                 CommonUtil.runCommand("stop");
                 return;
             }
 
             if (ConfigUtil.getMaxEmptyTime() - emptyTime <= 30) {
-                Main.LOGGER.warn("The server will be closed in {}s", ConfigUtil.getMaxEmptyTime() - emptyTime);
+                Main.LOGGER.warn("The server will be archived and closed in {}s", ConfigUtil.getMaxEmptyTime() - emptyTime);
             }
 
         }, 0, 1, TimeUnit.SECONDS);
