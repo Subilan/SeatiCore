@@ -23,6 +23,7 @@ public class BackupServerTask {
         backupServerExecutor.scheduleAtFixedRate(() -> {
             CommonUtil.saveEverything(server);
             Main.LOGGER.info("Uploading backup to OSS.");
+            // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."
             OSSUtil.doBackup();
         }, 0, ConfigUtil.getOssBackupInterval(), TimeUnit.SECONDS);
     }
