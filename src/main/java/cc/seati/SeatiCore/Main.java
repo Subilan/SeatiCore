@@ -1,6 +1,7 @@
 package cc.seati.SeatiCore;
 
 import cc.seati.SeatiCore.Database.Database;
+import cc.seati.SeatiCore.Tasks.BackupServerTask;
 import cc.seati.SeatiCore.Tasks.EmptyServerTask;
 import cc.seati.SeatiCore.Tasks.PlayersSnapshotTask;
 import cc.seati.SeatiCore.WebSocket.WebSocketServer;
@@ -21,6 +22,7 @@ public final class Main {
     public static MinecraftServer server;
     public static PlayersSnapshotTask playersSnapshotTask;
     public static EmptyServerTask emptyServerTask;
+    public static BackupServerTask backupServerTask;
     public static WebSocketServer wsServer;
     public static Thread wsThread;
 
