@@ -7,7 +7,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
@@ -37,7 +39,11 @@ public class CommonUtil {
     }
 
     public static <T> T waitFor(Future<T> future) throws ExecutionException, InterruptedException, TimeoutException {
-        return future.get(5, TimeUnit.SECONDS);
+        return waitFor(future, 5);
+    }
+
+    public static <T> T waitFor(Future<T> future, int timeout) throws ExecutionException, InterruptedException, TimeoutException {
+        return future.get(timeout, TimeUnit.SECONDS);
     }
 
     /**
@@ -87,6 +93,32 @@ public class CommonUtil {
             Main.LOGGER.warn("Cannot execute command: " + command);
             e.printStackTrace();
             return false;
+        });
+    }
+
+    public static boolean saveEverything(MinecraftServer server) {
+        return server.saveEverything(true, true, true);
+    }
+
+    public static @Nullable Process runScript(String scriptPath) {
+        ProcessBuilder pb = new ProcessBuilder(scriptPath);
+        pb.directory(new File("/"));
+        return tryReturn(pb::start, null);
+    }
+
+    public static CompletableFuture<Void> runScriptAndWait(String scriptPath) {
+        Process p = runScript(scriptPath);
+
+        return CompletableFuture.runAsync(() -> {
+            if (p == null) {
+                return;
+            }
+
+            try {
+                p.waitFor();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
     }
 }
