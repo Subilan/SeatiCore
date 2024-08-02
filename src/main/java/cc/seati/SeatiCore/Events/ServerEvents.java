@@ -1,6 +1,7 @@
 package cc.seati.SeatiCore.Events;
 
 import cc.seati.SeatiCore.Main;
+import cc.seati.SeatiCore.Tasks.BackupServerTask;
 import cc.seati.SeatiCore.Tasks.EmptyServerTask;
 import cc.seati.SeatiCore.Tasks.PlayersSnapshotTask;
 import cc.seati.SeatiCore.Utils.CommonUtil;
@@ -24,6 +25,8 @@ public class ServerEvents {
         Main.playersSnapshotTask.run();
         Main.emptyServerTask = new EmptyServerTask(Main.server);
         Main.emptyServerTask.run();
+        Main.backupServerTask = new BackupServerTask(Main.server);
+        Main.backupServerTask.run();
 
         if (ConfigUtil.getEnableWebsocketServer()) {
             Main.wsServer = new WebSocketServer(new InetSocketAddress(ConfigUtil.getWebsocketServerPort()), Main.server);
@@ -38,6 +41,7 @@ public class ServerEvents {
             Main.wsServer.stop();
             Main.playersSnapshotTask.shutdown();
             Main.emptyServerTask.shutdown();
+            Main.backupServerTask.shutdown();
             PlayerEvents.playtimeTrackerMap.forEach(((serverPlayer, playtimeTracker) -> {
                 playtimeTracker.shutdown();
             }));
