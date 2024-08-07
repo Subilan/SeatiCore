@@ -47,6 +47,14 @@ public class WebUtil {
         return decodeJWT(token) != null;
     }
 
+    public static boolean isJWTAdmin(String token) {
+        DecodedJWTPayload decodedJWTPayload = decodeJWT(token);
+
+        if (decodedJWTPayload == null) return false;
+
+        return ConfigUtil.getWebsocketAdminList().contains(decodedJWTPayload.username());
+    }
+
     public static JsonObject parseJson(String str) {
         return JsonParser.parseString(str).getAsJsonObject();
     }

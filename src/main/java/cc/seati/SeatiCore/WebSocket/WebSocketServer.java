@@ -1,12 +1,16 @@
 package cc.seati.SeatiCore.WebSocket;
 
 import cc.seati.SeatiCore.Main;
+import cc.seati.SeatiCore.Utils.CommonUtil;
+import cc.seati.SeatiCore.Utils.Records.DecodedJWTPayload;
+import cc.seati.SeatiCore.Utils.Records.WebSocketIdentity;
 import cc.seati.SeatiCore.Utils.TextUtil;
 import cc.seati.SeatiCore.Utils.WebUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -41,45 +45,62 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
         }
 
         String displayname;
+        WebSocketIdentity identity;
 
         if (!params.containsKey("token")) {
             conn.send("Missing token, logged in as guest.");
             Random rand = new Random();
             displayname = "Guest" + (rand.nextInt(99999) + 10000);
+            identity = new WebSocketIdentity(displayname, null);
         } else {
             if (!params.containsKey("displayname")) {
-                conn.send("Rejected: issing required argument `displayname`.");
+                conn.send("Rejected: missing required argument `displayname`.");
                 conn.close();
                 return;
             }
 
-            String token = params.get("token");
-            displayname = params.get("displayname");
-
-            if (!WebUtil.isJWTValid(token)) {
+            if (!WebUtil.isJWTValid(params.get("token"))) {
                 conn.send("Rejected: Invalid token provided.");
                 conn.close();
                 return;
             }
+
+            displayname = params.get("displayname");
+            identity = new WebSocketIdentity(displayname, WebUtil.decodeJWT(params.get("token")));
         }
 
         onlineNames.add(displayname);
         this.broadcastMessage(conn, withPrefix("&e" + displayname + "&f 加入了服务器聊天"));
-        conn.setAttachment(displayname);
+        conn.setAttachment(identity);
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        if (conn.getAttachment() != null) this.broadcastMessage(conn, withPrefix("&e" + conn.getAttachment() + "&f 退出了服务器聊天"));
+        WebSocketIdentity id = a(conn);
+        if (id.invalid()) return;
+
+        this.broadcastMessage(conn, withPrefix("&e" + id.displayname() + "&f 退出了服务器聊天"));
     }
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        if (((String) conn.getAttachment()).startsWith("Guest")) {
+        WebSocketIdentity id = a(conn);
+        if (id.invalid()) return;
+
+        if (id.isGuest()) {
             conn.send("You can't send message in Guest mode.");
             return;
         }
-        if (conn.getAttachment() != null) this.broadcastMessage(conn, senderSay(conn, message));
+
+        if (message.startsWith("/")) {
+            if (id.isAdmin()) {
+                CommonUtil.runCommand(message.substring(1));
+            } else {
+                conn.send("You don't have permission to use command in web GUI.");
+            }
+        } else {
+            this.broadcastMessage(conn, senderSay(id.displayname(), message));
+        }
     }
 
     @Override
@@ -91,12 +112,17 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
         return TextUtil.literal("&a[Web] " + content);
     }
 
-    public static Component senderSay(WebSocket conn, String content) {
-        return withPrefix("&f<" + conn.getAttachment() + "> " + content);
+    public static Component senderSay(String displayname, String content) {
+        return withPrefix("&f<" + displayname + "> " + content);
     }
 
     @Override
     public void onStart() {
         Main.LOGGER.info("Started WebSocket server at *:{}", this.getPort());
+    }
+
+    private WebSocketIdentity a(WebSocket conn) {
+        if (conn.getAttachment() != null) return conn.getAttachment();
+        return new WebSocketIdentity("", null);
     }
 }

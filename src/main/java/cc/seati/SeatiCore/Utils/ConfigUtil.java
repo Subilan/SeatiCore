@@ -4,6 +4,7 @@ import cc.seati.SeatiCore.Main;
 import org.bspfsystems.yamlconfiguration.configuration.ConfigurationSection;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConfigUtil {
@@ -24,6 +25,7 @@ public class ConfigUtil {
     private static final String ENABLE_WEBSOCKET_SERVER = "ws.enable";
     private static final String WEBSOCKET_SERVER_PORT = "ws.port";
     private static final String WEBSOCKET_JWT_SECRET = "ws.jwt-secret";
+    private static final String WEBSOCKET_ADMIN_LIST = "ws.admin";
     private static final String API_SERVER_SECRET = "api.server-secret";
     private static final String API_HOST = "api.host";
     private static final String MAX_EMPTY_TIME = "max-empty-time";
@@ -109,6 +111,10 @@ public class ConfigUtil {
 
     public static String getWebsocketJwtSecret() {
         return Main.config.target().getString(WEBSOCKET_JWT_SECRET);
+    }
+
+    public static List<String> getWebsocketAdminList() {
+        return Main.config.target().getStringList(WEBSOCKET_ADMIN_LIST);
     }
 
     public static String getApiServerSecret() {
