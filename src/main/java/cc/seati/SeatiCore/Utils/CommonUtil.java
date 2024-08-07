@@ -4,6 +4,7 @@ import cc.seati.SeatiCore.Main;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -36,6 +37,10 @@ public class CommonUtil {
 
     public static void sendMessage(CommandContext<CommandSourceStack> ctx, String message) {
         ctx.getSource().sendSystemMessage(TextUtil.literal(message));
+    }
+
+    public static void sendMessage(CommandContext<CommandSourceStack> ctx, MutableComponent component) {
+        ctx.getSource().sendSystemMessage(component);
     }
 
     public static <T> T waitFor(Future<T> future) throws ExecutionException, InterruptedException, TimeoutException {
