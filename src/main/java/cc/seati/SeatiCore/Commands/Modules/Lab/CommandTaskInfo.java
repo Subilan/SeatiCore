@@ -48,7 +48,8 @@ public class CommandTaskInfo extends Command {
                 "&a" + taskName + " &e任务的相关信息\n\n" +
                         (isRunning ? "&a✔ 运行中" : "&c✘ 已停止") + "\n" +
                         "&f执行频率：&e" + interval + "s\n" +
-                        "&f上次执行时间：&e" + lastExecutionString + "\n"
+                        "&f上次执行时间：&e" + lastExecutionString + "\n" +
+                        "&f连续运行时间：&e" + targetTask.getUptime() + "s\n"
         );
     }
 }

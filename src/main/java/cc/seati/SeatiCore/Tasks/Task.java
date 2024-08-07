@@ -42,6 +42,10 @@ public abstract class Task {
         return !taskFuture.isDone();
     }
 
+    public int getUptime() {
+        return this.uptime;
+    }
+
     public abstract int getInterval();
 
     public abstract @Nullable LocalDateTime getLastExecution();
