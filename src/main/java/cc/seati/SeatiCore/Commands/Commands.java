@@ -1,6 +1,6 @@
 package cc.seati.SeatiCore.Commands;
 
-import cc.seati.SeatiCore.Commands.Modules.CommandReload;
+import cc.seati.SeatiCore.Commands.Modules.Lab.CommandReload;
 import cc.seati.SeatiCore.Commands.Modules.Stats.*;
 import cc.seati.SeatiCore.Commands.Modules.Lab.ModuleLab;
 import cc.seati.SeatiCore.Utils.CommonUtil;

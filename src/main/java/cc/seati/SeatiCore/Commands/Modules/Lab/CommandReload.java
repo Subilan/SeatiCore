@@ -1,4 +1,4 @@
-package cc.seati.SeatiCore.Commands.Modules;
+package cc.seati.SeatiCore.Commands.Modules.Lab;
 
 import cc.seati.SeatiCore.Commands.Abstract.Command;
 import cc.seati.SeatiCore.Utils.ConfigUtil;
