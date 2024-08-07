@@ -41,6 +41,6 @@ public class LabUtil {
     }
 
     public static CompletableFuture<Void> deleteThis() {
-        return WebUtil.DELETE(ConfigUtil.getApiHost() + ENDPOINT_DELETE_INSTANCE);
+        return WebUtil.DELETE(ConfigUtil.getApiHost() + ENDPOINT_DELETE_INSTANCE + "?force=true");
     }
 }
