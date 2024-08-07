@@ -65,7 +65,7 @@ public class EmptyServerTask extends Task {
     public MutableComponent getExtraInfo() {
         return TextUtil.literal(
                 "&f空置时间：&e" + TextUtil.formatSeconds(this.emptyTime) + "s\n" +
-                        "距离释放：&c" + TextUtil.formatSeconds(ConfigUtil.getMaxEmptyTime() - this.emptyTime) + "s\n"
+                        "&f距离释放：&c" + TextUtil.formatSeconds(ConfigUtil.getMaxEmptyTime() - this.emptyTime) + "s\n"
         );
     }
 }
