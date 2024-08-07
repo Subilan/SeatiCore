@@ -29,7 +29,7 @@ public class BackupServerTask extends Task {
             // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."
             OSSUtil.doBackup();
             lastExecution = LocalDateTime.now();
-        }, 0, getInterval(), TimeUnit.SECONDS);
+        }, getInterval(), getInterval(), TimeUnit.SECONDS);
     }
 
     @Override
