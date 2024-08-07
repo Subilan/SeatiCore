@@ -26,17 +26,17 @@ public class CommandTaskRunStop extends Command {
 
         Task targetTask = type.toMainTask();
         if (this.run && targetTask.isRunning()) {
-            CommonUtil.sendMessage(ctx, "&e指定任务已经在运行\n&e输入 &b/seati lab taskinfo " + this.taskName + "&e 查看详细信息");
+            CommonUtil.sendMessage(ctx, "&c无效操作：&e指定任务已经在运行\n&e输入 &b/seati lab taskinfo " + this.taskName + "&e 查看详细信息");
             return 1;
         }
 
         if (!this.run && !targetTask.isRunning()) {
-            CommonUtil.sendMessage(ctx, "&e指定任务已经停止\n&e输入 &b/seati lab taskinfo " + this.taskName + "&e 查看详细信息");
+            CommonUtil.sendMessage(ctx, "&c无效操作：&e指定任务已经停止\n&e输入 &b/seati lab taskinfo " + this.taskName + "&e 查看详细信息");
             return 1;
         }
 
         if (this.run) targetTask.run();
-        else targetTask.shutdown();
+        else targetTask.cancel();
         CommonUtil.sendMessage(ctx, (this.run ? "&a开始" : "&c停止") + "&e运行任务 &e" + this.taskName);
         return 1;
     }

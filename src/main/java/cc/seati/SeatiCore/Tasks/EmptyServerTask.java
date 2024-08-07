@@ -22,7 +22,7 @@ public class EmptyServerTask extends Task {
 
     public void start() {
         Main.LOGGER.info("Running EmptyServerTask at interval of 1s, maxemptytime={}s", ConfigUtil.getMaxEmptyTime());
-        executorService.scheduleAtFixedRate(() -> {
+        taskFuture = executorService.scheduleAtFixedRate(() -> {
             if (server.getPlayerCount() == 0) {
                 emptyTime += 1;
             } else {

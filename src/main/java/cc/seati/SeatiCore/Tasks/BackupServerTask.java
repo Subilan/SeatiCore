@@ -8,9 +8,6 @@ import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class BackupServerTask extends Task {
@@ -23,7 +20,7 @@ public class BackupServerTask extends Task {
 
     public void start() {
         Main.LOGGER.info("Running BackupServerTask at interval of {}s", ConfigUtil.getOssBackupInterval());
-        executorService.scheduleAtFixedRate(() -> {
+        taskFuture = executorService.scheduleAtFixedRate(() -> {
             CommonUtil.saveEverything(server);
             Main.LOGGER.info("Uploading backup to OSS.");
             // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."

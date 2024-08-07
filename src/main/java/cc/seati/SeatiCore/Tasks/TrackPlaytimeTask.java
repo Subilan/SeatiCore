@@ -170,4 +170,9 @@ public final class TrackPlaytimeTask extends Task {
     public TaskType getType() {
         return TaskType.PLAYTIME;
     }
+
+    @Override
+    public void cancel() {
+        Main.LOGGER.warn("Trying to cancel playtime task. No effect is applied.");
+    }
 }

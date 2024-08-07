@@ -7,10 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PlayersSnapshotTask extends Task {
@@ -25,7 +22,7 @@ public class PlayersSnapshotTask extends Task {
 
     public void start() {
         Main.LOGGER.info("Running PlayersSnapshotTask at duration of {}s", this.interval);
-        executorService.scheduleAtFixedRate(() -> {
+        taskFuture = executorService.scheduleAtFixedRate(() -> {
             List<String> playerNames = server.getPlayerList().getPlayers().stream().map(p -> p.getName().getString()).toList();
             new OnlinePlayerSnapshot(playerNames.size(), String.join(",", playerNames)).saveAsync(DBUtil.getManager());
             lastExecution = LocalDateTime.now();
