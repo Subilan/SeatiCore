@@ -10,8 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class PlayersSnapshotTask {
-    private final ScheduledExecutorService snapshotExecutor = Executors.newSingleThreadScheduledExecutor();
+public class PlayersSnapshotTask extends Task {
     private final int interval;
     private final MinecraftServer server;
 
@@ -22,13 +21,9 @@ public class PlayersSnapshotTask {
 
     public void run() {
         Main.LOGGER.info("Running PlayersSnapshotTask at duration of {}s", this.interval);
-        snapshotExecutor.scheduleAtFixedRate(() -> {
+        executorService.scheduleAtFixedRate(() -> {
             List<String> playerNames = server.getPlayerList().getPlayers().stream().map(p -> p.getName().getString()).toList();
             new OnlinePlayerSnapshot(playerNames.size(), String.join(",", playerNames)).saveAsync(DBUtil.getManager());
         }, 0, this.interval, TimeUnit.SECONDS);
-    }
-
-    public void shutdown() {
-        snapshotExecutor.shutdown();
     }
 }

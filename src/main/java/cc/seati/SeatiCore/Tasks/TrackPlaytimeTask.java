@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public final class TrackPlaytimeTask {
+public final class TrackPlaytimeTask extends Task {
     private final ServerPlayer targetPlayer;
     private final String targetPlayerName;
     private final ScheduledExecutorService timerExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -52,7 +52,6 @@ public final class TrackPlaytimeTask {
      * </ul>
      */
     public void run() {
-
         if (this.record == null) {
             Main.LOGGER.warn("Run playtime tracker for {} failed.", targetPlayer.getName().getString());
             return;
@@ -145,6 +144,7 @@ public final class TrackPlaytimeTask {
         return TextUtil.literal("&7" + ConfigUtil.getAfkLeavingMessagePattern().replaceAll("\\$player", targetPlayer.getName().getString()));
     }
 
+    @Override
     public void shutdown() {
         this.timerExecutor.shutdown();
         this.afkExecutor.shutdown();

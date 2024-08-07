@@ -11,8 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class EmptyServerTask {
-    private final ScheduledExecutorService emptyServerExecutor = Executors.newSingleThreadScheduledExecutor();
+public class EmptyServerTask extends Task {
     private final MinecraftServer server;
     private int emptyTime = 0;
 
@@ -22,7 +21,7 @@ public class EmptyServerTask {
 
     public void run() {
         Main.LOGGER.info("Running EmptyServerTask at interval of 1s, maxemptytime={}s", ConfigUtil.getMaxEmptyTime());
-        emptyServerExecutor.scheduleAtFixedRate(() -> {
+        executorService.scheduleAtFixedRate(() -> {
             if (server.getPlayerCount() == 0) {
                 emptyTime += 1;
             } else {
@@ -43,9 +42,5 @@ public class EmptyServerTask {
             }
 
         }, 0, 1, TimeUnit.SECONDS);
-    }
-
-    public void shutdown() {
-        emptyServerExecutor.shutdown();
     }
 }
