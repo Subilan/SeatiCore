@@ -1,10 +1,8 @@
 package cc.seati.SeatiCore.Tasks;
 
 import cc.seati.SeatiCore.Main;
-import cc.seati.SeatiCore.Utils.CommonUtil;
-import cc.seati.SeatiCore.Utils.ConfigUtil;
-import cc.seati.SeatiCore.Utils.LabUtil;
-import cc.seati.SeatiCore.Utils.OSSUtil;
+import cc.seati.SeatiCore.Utils.*;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,5 +59,13 @@ public class EmptyServerTask extends Task {
     @Override
     public TaskType getType() {
         return TaskType.EMPTY_SERVER;
+    }
+
+    @Override
+    public MutableComponent getExtraInfo() {
+        return TextUtil.literal(
+                "&f空置时间：&e" + this.emptyTime + "s\n" +
+                        "距离释放：&c" + (ConfigUtil.getMaxEmptyTime() - this.emptyTime) + "s\n"
+        );
     }
 }

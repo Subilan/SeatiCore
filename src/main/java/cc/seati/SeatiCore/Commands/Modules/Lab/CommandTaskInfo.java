@@ -3,11 +3,13 @@ package cc.seati.SeatiCore.Commands.Modules.Lab;
 import cc.seati.SeatiCore.Commands.Abstract.Command;
 import cc.seati.SeatiCore.Main;
 import cc.seati.SeatiCore.Tasks.Task;
+import cc.seati.SeatiCore.Tasks.TaskType;
 import cc.seati.SeatiCore.Utils.CommonUtil;
 import cc.seati.SeatiCore.Utils.TextUtil;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
@@ -21,25 +23,18 @@ public class CommandTaskInfo extends Command {
 
     @Override
     public int handle(CommandContext<CommandSourceStack> ctx) {
-        MutableComponent component = buildTaskInfo(this.taskName);
-        if (component == null) {
+        TaskType type = TaskType.of(this.taskName);
+        if (type == null) {
             CommonUtil.sendMessage(ctx, "&c找不到 &e" + this.taskName + "&c 的相关信息");
-        } else {
-            CommonUtil.sendMessage(ctx, component);
+            return 1;
         }
+        Task task = type.toMainTask();
+        MutableComponent component = buildTaskInfo(task).append(task.getExtraInfo());
+        CommonUtil.sendMessage(ctx, component);
         return 1;
     }
 
-    public @Nullable MutableComponent buildTaskInfo(String taskName) {
-        Task targetTask = switch (taskName) {
-            case "backupServer" -> Main.backupServerTask;
-            case "emptyServer" -> Main.emptyServerTask;
-            case "playerSnapshot" -> Main.playersSnapshotTask;
-            default -> null;
-        };
-
-        if (targetTask == null) return null;
-
+    public MutableComponent buildTaskInfo(@NotNull Task targetTask) {
         boolean isRunning = targetTask.isRunning();
         int interval = targetTask.getInterval();
         LocalDateTime lastExecution = targetTask.getLastExecution();

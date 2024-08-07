@@ -17,10 +17,15 @@ public enum TaskType {
         this.name = name;
     }
 
+    /**
+     * 根据 value 的值返回一个 TaskType
+     * @param value 与 TaskType#toString 所对应的值，不区分大小写
+     * @return 如果有匹配，返回对应的 TaskType，否则返回 null
+     */
     public static @Nullable TaskType of(String value) {
         try {
             return Arrays.stream(TaskType.values())
-                    .filter(x -> x.toString().equals(value))
+                    .filter(x -> x.toString().equalsIgnoreCase(value))
                     .toList()
                     .get(0);
         } catch (IndexOutOfBoundsException e) {

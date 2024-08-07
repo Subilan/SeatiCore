@@ -1,5 +1,8 @@
 package cc.seati.SeatiCore.Tasks;
 
+import cc.seati.SeatiCore.Utils.TextUtil;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
@@ -51,4 +54,8 @@ public abstract class Task {
     public abstract @Nullable LocalDateTime getLastExecution();
 
     public abstract TaskType getType();
+
+    public MutableComponent getExtraInfo() {
+        return TextUtil.literal("&7此任务没有其它关键参数");
+    }
 }

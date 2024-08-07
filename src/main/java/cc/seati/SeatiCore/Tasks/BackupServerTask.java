@@ -4,6 +4,7 @@ import cc.seati.SeatiCore.Main;
 import cc.seati.SeatiCore.Utils.CommonUtil;
 import cc.seati.SeatiCore.Utils.ConfigUtil;
 import cc.seati.SeatiCore.Utils.OSSUtil;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 

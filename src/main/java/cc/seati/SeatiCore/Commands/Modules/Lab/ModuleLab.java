@@ -16,15 +16,15 @@ public class ModuleLab extends Module {
             case "verify" -> new CommandVerify().handle(ctx);
             case "archive" -> new CommandArchive().handle(ctx);
             case "backup" -> new CommandBackup().handle(ctx);
-            case "taskinfo", "taskrun", "taskstop" -> {
+            case "taskinfo", "taskrun", "taskstop", "ti", "tu", "td", "taskup", "taskdown", "taskstart" -> {
                 if (argArray.length < 2) {
                     CommonUtil.sendMessage(ctx, "&c参数不足");
                     yield 1;
                 } else {
                     yield switch (action) {
                         case "taskinfo" -> new CommandTaskInfo(argArray[1]).handle(ctx);
-                        case "taskrun" -> new CommandTaskRunStop(argArray[1], true).handle(ctx);
-                        case "taskstop" -> new CommandTaskRunStop(argArray[1], false).handle(ctx);
+                        case "taskrun", "taskup", "tu", "taskstart" -> new CommandTaskRunStop(argArray[1], true).handle(ctx);
+                        case "taskstop", "taskdown", "td" -> new CommandTaskRunStop(argArray[1], false).handle(ctx);
                         default -> throw new IllegalStateException("Unexpected value: " + action);
                     };
                 }
