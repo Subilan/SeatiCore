@@ -6,20 +6,21 @@ import cc.seati.SeatiCore.Utils.ConfigUtil;
 import cc.seati.SeatiCore.Utils.LabUtil;
 import cc.seati.SeatiCore.Utils.OSSUtil;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 public class EmptyServerTask extends Task {
     private final MinecraftServer server;
     private int emptyTime = 0;
+    private @Nullable LocalDateTime lastExecution = null;
 
     public EmptyServerTask(MinecraftServer server) {
         this.server = server;
     }
 
-    public void run() {
+    public void start() {
         Main.LOGGER.info("Running EmptyServerTask at interval of 1s, maxemptytime={}s", ConfigUtil.getMaxEmptyTime());
         executorService.scheduleAtFixedRate(() -> {
             if (server.getPlayerCount() == 0) {
@@ -34,6 +35,8 @@ public class EmptyServerTask extends Task {
                 // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."
                 OSSUtil.doArchive();
                 CommonUtil.waitForWhatever(LabUtil.deleteThis());
+                // Required to prevent unexpected repeated archive execution.
+                shutdown();
                 return;
             }
 
@@ -41,6 +44,22 @@ public class EmptyServerTask extends Task {
                 Main.LOGGER.warn("The server will be archived and closed in {}s", ConfigUtil.getMaxEmptyTime() - emptyTime);
             }
 
+            lastExecution = LocalDateTime.now();
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public int getInterval() {
+        return 1;
+    }
+
+    @Override
+    public @Nullable LocalDateTime getLastExecution() {
+        return lastExecution;
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.EMPTY_SERVER;
     }
 }

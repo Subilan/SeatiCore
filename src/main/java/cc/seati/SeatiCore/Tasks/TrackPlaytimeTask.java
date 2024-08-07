@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -51,7 +52,7 @@ public final class TrackPlaytimeTask extends Task {
      *     当挂机缓冲值达到 config 中规定的阈值时，将挂机状态设置为 true，并选择是提示所有人该玩家 AFK 的消息，或是踢出游戏。</li>
      * </ul>
      */
-    public void run() {
+    public void start() {
         if (this.record == null) {
             Main.LOGGER.warn("Run playtime tracker for {} failed.", targetPlayer.getName().getString());
             return;
@@ -152,5 +153,21 @@ public final class TrackPlaytimeTask extends Task {
         if (ConfigUtil.getEnableFTBRanksIntegration()) {
             this.rankExecutor.shutdown();
         }
+        this.uptimeService.shutdown();
+    }
+
+    @Override
+    public int getInterval() {
+        return 1;
+    }
+
+    @Override
+    public @Nullable LocalDateTime getLastExecution() {
+        return null;
+    }
+
+    @Override
+    public TaskType getType() {
+        return TaskType.PLAYTIME;
     }
 }
