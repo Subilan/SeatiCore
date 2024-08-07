@@ -32,6 +32,7 @@ public class EmptyServerTask extends Task {
                 CommonUtil.saveEverything(server);
                 // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."
                 OSSUtil.doArchive();
+                Main.LOGGER.warn("Archive complete. Server will be deleted immediately.");
                 CommonUtil.waitForWhatever(LabUtil.deleteThis());
                 // Required to prevent unexpected repeated archive execution.
                 shutdown();
