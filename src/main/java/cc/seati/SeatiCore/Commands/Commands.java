@@ -22,7 +22,7 @@ public class Commands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> command =
                 net.minecraft.commands.Commands.literal("seati")
-                        .requires(source -> source.hasPermission(2))
+                        .requires(source -> source.hasPermission(0))
                         .then(
                                 net.minecraft.commands.Commands.argument("module", StringArgumentType.string())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
