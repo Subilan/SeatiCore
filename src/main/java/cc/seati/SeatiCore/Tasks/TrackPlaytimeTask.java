@@ -94,10 +94,7 @@ public final class TrackPlaytimeTask extends Task {
                 this.afkBufferTime += 1;
             } else {
                 // If player is currently moving, reset buffer time and remove afk status.
-                this.isAFK = false;
-                if (!this.afkMessageFlag) CommonUtil.sendAll(targetPlayer.getServer(), getAfkLeavingMessageComponent(targetPlayer));
-                this.afkMessageFlag = true;
-                this.afkBufferTime = 0;
+                this.clearAFKState();
             }
 
             playerPositionData = newData;
@@ -135,6 +132,13 @@ public final class TrackPlaytimeTask extends Task {
                 }
             }, 0, 1, TimeUnit.SECONDS);
         }
+    }
+
+    public void clearAFKState() {
+        this.isAFK = false;
+        if (!this.afkMessageFlag) CommonUtil.sendAll(targetPlayer.getServer(), getAfkLeavingMessageComponent(targetPlayer));
+        this.afkMessageFlag = true;
+        this.afkBufferTime = 0;
     }
 
     public static MutableComponent getAfkEnteringMessageComponent(Player targetPlayer) {

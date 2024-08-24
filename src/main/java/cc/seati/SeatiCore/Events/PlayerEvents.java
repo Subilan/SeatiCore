@@ -8,7 +8,9 @@ import cc.seati.SeatiCore.Utils.*;
 import cc.seati.SeatiCore.Utils.Records.MCIDUsage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -62,5 +64,17 @@ public class PlayerEvents {
                 ConfigUtil.getPeriodTag(),
                 false
         ).saveAsync(DBUtil.getManager());
+    }
+
+    @SubscribeEvent
+    public static void handlePlayerInteract(PlayerInteractEvent e) {
+        ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
+        playtimeTrackerMap.get(player).clearAFKState();
+    }
+
+    @SubscribeEvent
+    public static void handlePlayerContainer(PlayerContainerEvent e) {
+        ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
+        playtimeTrackerMap.get(player).clearAFKState();
     }
 }
