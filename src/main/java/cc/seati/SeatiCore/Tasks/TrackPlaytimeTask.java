@@ -6,6 +6,7 @@ import cc.seati.SeatiCore.Main;
 import cc.seati.SeatiCore.Utils.CommonUtil;
 import cc.seati.SeatiCore.Utils.ConfigUtil;
 import cc.seati.SeatiCore.Utils.RankUtil;
+import cc.seati.SeatiCore.Utils.Records.PlayerPosition;
 import cc.seati.SeatiCore.Utils.TextUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -32,7 +33,7 @@ public final class TrackPlaytimeTask extends Task {
     private boolean isAFK = false;
     private boolean afkMessageFlag = true;
     private int afkBufferTime = 0;
-    private Vector<Double> playerPositionData = new Vector<>(List.of(0d, 0d, 0d, 0d, 0d, 0d));
+    private PlayerPosition playerPositionData = new PlayerPosition(0, 0, 0, 0, 0, 0);
     private final @Nullable PlaytimeRecord record;
     private final SQLManager manager;
 
@@ -76,20 +77,10 @@ public final class TrackPlaytimeTask extends Task {
 
         afkExecutor.scheduleAtFixedRate(() -> {
             Vec3 lookAngle = this.targetPlayer.getLookAngle();
-            Vector<Double> newData = new Vector<>(List.of(this.targetPlayer.getX(), this.targetPlayer.getY(), this.targetPlayer.getZ(), lookAngle.x(), lookAngle.y(), lookAngle.z()));
-
+            PlayerPosition newData = new PlayerPosition(targetPlayer.getX(), targetPlayer.getY(), targetPlayer.getZ(), lookAngle.x(), lookAngle.y(), lookAngle.z());
 
             // Compare new data with old data.
-            // The fact that any item of the data keeps unchanged suggests the player is not moving validly.
-            if ((
-                    playerPositionData.get(0).equals(newData.get(0))
-                            || playerPositionData.get(2).equals(newData.get(2))
-                            || playerPositionData.get(3).equals(newData.get(3))
-                            || playerPositionData.get(4).equals(newData.get(4))
-                            || playerPositionData.get(5).equals(newData.get(5))
-            ) && (
-                    playerPositionData.get(1).equals(newData.get(1))
-            )) {
+            if (newData.isSimilarTo(this.playerPositionData)) {
                 // If so, add afkBufferTime by 1, makes it closer to the threshold.
                 this.afkBufferTime += 1;
             } else {
@@ -97,7 +88,7 @@ public final class TrackPlaytimeTask extends Task {
                 this.clearAFKState();
             }
 
-            playerPositionData = newData;
+            this.playerPositionData = newData;
 
             // If buffer time exceeds the threshold of kicking, just disconnect the player with a reason.
             if (this.afkBufferTime >= ConfigUtil.getAfkKickThreshold()) {
