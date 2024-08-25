@@ -29,7 +29,7 @@ public class EmptyServerTask extends Task {
 
             if (emptyTime > ConfigUtil.getMaxEmptyTime()) {
                 Main.LOGGER.warn("Empty time reached the limit of {}s. Archiving files.", ConfigUtil.getMaxEmptyTime());
-                CommonUtil.saveEverything(server);
+                // CommonUtil.saveEverything(server);
                 // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."
                 OSSUtil.doArchive();
                 Main.LOGGER.warn("Archive complete. Server will be deleted immediately.");

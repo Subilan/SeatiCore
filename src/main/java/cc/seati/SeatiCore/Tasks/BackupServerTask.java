@@ -22,7 +22,7 @@ public class BackupServerTask extends Task {
     public void start() {
         Main.LOGGER.info("Running BackupServerTask at interval of {}s", ConfigUtil.getOssBackupInterval());
         taskFuture = executorService.scheduleAtFixedRate(() -> {
-            CommonUtil.saveEverything(server);
+            // CommonUtil.saveEverything(server);
             Main.LOGGER.info("Uploading backup to OSS.");
             // "If any execution of this task takes longer than its period, then subsequent executions may start late, but will not concurrently execute."
             OSSUtil.doBackup();
