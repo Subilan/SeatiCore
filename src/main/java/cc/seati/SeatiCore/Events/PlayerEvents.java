@@ -69,12 +69,14 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void handlePlayerInteract(PlayerInteractEvent e) {
         ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
-        playtimeTrackerMap.get(player).clearAFKState();
+        TrackPlaytimeTask target = playtimeTrackerMap.get(player);
+        if (target != null) target.clearAFKState();
     }
 
     @SubscribeEvent
     public static void handlePlayerContainer(PlayerContainerEvent e) {
         ServerPlayer player = CommonUtil.getServerPlayer(e.getEntity());
-        playtimeTrackerMap.get(player).clearAFKState();
+        TrackPlaytimeTask target = playtimeTrackerMap.get(player);
+        if (target != null) target.clearAFKState();
     }
 }
